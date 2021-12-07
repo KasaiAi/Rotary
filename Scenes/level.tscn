@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/Models/ref cylinder.glb" type="PackedScene" id=1]
+[ext_resource path="res://Scripts/level_control.gd" type="Script" id=2]
+
+[sub_resource type="CylinderShape" id=1]
+radius = 6.34827
+height = 0.12802
+
+[node name="World" type="Spatial"]
+script = ExtResource( 2 )
+
+[node name="ref cylinder" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7, 0 )
+visible = false
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20 )
+projection = 1
+size = 16.0
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 0.731723, 0.32163, 0.600946, -0.681603, 0.345281, 0.645135, 0, -0.881666, 0.471874, -6.25808, 4.05128, 11 )
+
+[node name="Cylinder base" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7, 0 )
+
+[node name="StaticBody" type="StaticBody" parent="Cylinder base"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Cylinder base/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.07, 0 )
+shape = SubResource( 1 )
+
+[node name="Spawner" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0 )
+
+[node name="SpawnTimer" type="Timer" parent="."]
+
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_SpawnTimer_timeout"]
