@@ -1,11 +1,12 @@
-extends MeshInstance
+extends Spatial
 
 # Declare member variables here. Examples:
 var cellType = randi() % 4 # Número aleatório entre 0 e 4
-var material = get_surface_material(0) # Chama o material da malha
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	var material = $RigidBody/Cube.get_surface_material(0) # Chama o material da malha
+	
 	match cellType: # Switch case para as quatro cores
 		0:
 			# Só funciona porque tá instanciado, eu acho;
@@ -18,8 +19,11 @@ func _ready():
 		3:
 			material.albedo_color = Color(0.83,0.78,0.1) # Yellow
 	
-	get_parent().translation.z += 5.25
-#	pass
+	$RigidBody.translation.z += 5.25
+
+#func _physics_process(_delta):
+#	if not RigidBody_collision_detected
+#		translation.y -= .3
 
 
 	
