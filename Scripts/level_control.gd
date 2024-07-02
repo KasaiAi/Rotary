@@ -1,12 +1,12 @@
-extends Spatial
+extends Node3D
 
 var starting = true
 
-export var height = 8
-export var width = 20
-export (int) var x_start
-export (int) var y_start
-export (int) var offset
+@export var height = 8
+@export var width = 20
+@export (int) var x_start
+@export (int) var y_start
+@export (int) var offset
 var all_pieces = []
 
 var cell = load("res://Objects/cell.tscn")
@@ -19,7 +19,7 @@ func _ready():
 	all_pieces = make_2d_array()
 	
 #	spawnCD.one_shot = true
-	spawnCD.connect("timeout", self, "spawn_cell")
+	spawnCD.connect("timeout", Callable(self, "spawn_cell"))
 	add_child(spawnCD)
 	
 	initial_spawn()
@@ -37,8 +37,8 @@ func initial_spawn():
 	spawnCD.start(0.03)
 
 func spawn_cell():
-	var newCell = cell.instance()
-	newCell.translation = $Spawner.translation
+	var newCell = cell.instantiate()
+	newCell.position = $Spawner.position
 	newCell.rotation = $Spawner.rotation
 	add_child(newCell)
 	$Spawner.rotate(Vector3(0,1,0),0.314159)

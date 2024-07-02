@@ -1,4 +1,4 @@
-extends Spatial
+extends Node3D
 
 # Declare member variables here. Examples:
 #var red_cell = load("res://scenes/red cell.tscn")
