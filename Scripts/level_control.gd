@@ -2,61 +2,76 @@ extends Node3D
 
 var starting = true
 
-@export var height = 8
-@export var width = 20
-@export (int) var x_start
-@export (int) var y_start
-@export (int) var offset
+@export var maxRings = 8
+@export var ringSize = 20
+@export var spawnRotationAngle= 0.314159
+@export var ringOffset = 5
+@export var initialSpawn = 7
+@export var spawnCD = 0.03
 var all_pieces = []
 
 var cell = load("res://Objects/cell.tscn")
 var cellType
-var spawnCD = Timer.new()
-var cell_queue
+var spawnTimer = Timer.new()
 
 func _ready():
 	randomize()
 	all_pieces = make_2d_array()
 	
-#	spawnCD.one_shot = true
-	spawnCD.connect("timeout", Callable(self, "spawn_cell"))
-	add_child(spawnCD)
+	spawnTimer.connect("timeout", Callable(self, "_on_spawnTimer_timeout"))
+	add_child(spawnTimer)
 	
-	initial_spawn()
+	spawnTimer.start(spawnCD)
 
 func make_2d_array():
 	var array = []
-	for i in width:
+	for i in ringSize:
 		array.append([])
-		for j in height:
+		for j in maxRings:
 			array[i].append(null)
 	return array
 
-func initial_spawn():
-	cell_queue = 160
-	spawnCD.start(0.03)
+func move_spawn_point():
+	$Spawner.rotate(Vector3(0,1,0),spawnRotationAngle)
 
 func spawn_cell():
 	var newCell = cell.instantiate()
 	newCell.position = $Spawner.position
 	newCell.rotation = $Spawner.rotation
 	add_child(newCell)
-	$Spawner.rotate(Vector3(0,1,0),0.314159)
-	cell_queue -= 1
-	if cell_queue <= 0:
-		spawnCD.stop()
+#	initialSpawn -= 1
+#	if cell_queue <= 0:
+#		spawnTimer.stop()
+#	move_spawn_point()
 
 func spawn_ring():
 	for i in 20:
 		spawn_cell()
-
-func tic_toc_spawner():
-#	1/sec
-	pass
+		move_spawn_point()
 
 func _process(_delta):
 	if Input.is_action_just_pressed("ui_down"):
 		spawn_ring()
+	if Input.is_action_just_released("click"):
+		spawn_cell()
+		move_spawn_point()
+	if Input.is_action_just_released("drag"):
+		move_spawn_point()
+#	$Mouseover.target_position = globalmouseposition
+#	slightly brighter shade
+#	Raycast? Ia ser massa se funcionasse
+
+func _on_spawnTimer_timeout():
+	spawn_cell()
+	move_spawn_point()
+	if initialSpawn > 0:
+		initialSpawn -= 1
+	if initialSpawn <= 0:
+		spawnCD = .7
+		print(initialSpawn)
+#		spawnTimer.start(spawnCD)
+#		spawnTimer.stop()
+
 
 
 #Criar peça no cenário						OK!
@@ -83,7 +98,3 @@ func _process(_delta):
 #Impedir que peças em queda empurrem as de baixo
 #Melhorar as cores
 #Tentar embaralhar mais as peças
-
-
-func _on_SpawnTimer_timeout():
-	pass # Replace with function body.

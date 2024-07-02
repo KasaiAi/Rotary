@@ -9,7 +9,7 @@ func _ready():
 	
 	match cellType: # Switch case para as quatro cores
 		0:
-			# Só funciona porque tá instanciado, eu acho;
+			# O material precisa ser único, senão todos os cubos mudar pra a mesma cor;
 			# muda a cor (albedo) do material
 			material.albedo_color = Color(0.82,0.08,0.08) # Red
 		1:
@@ -21,7 +21,8 @@ func _ready():
 	
 	$RigidBody3D.position.z += 5.25
 
-#func _physics_process(_delta):
+func _process(_delta):
+	pass
 #	if not RigidBody_collision_detected
 #		translation.y -= .3
 

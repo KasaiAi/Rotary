@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://6fx1sm06vjv6"]
 
-[ext_resource type="PackedScene" uid="uid://bmhx1kwbg0col" path="res://Assets/Models/ref cylinder.glb" id="1"]
+[ext_resource type="PackedScene" uid="uid://bu6qrsjwjq8pv" path="res://Assets/Models/ref cylinder.glb" id="1"]
 [ext_resource type="Script" path="res://Scripts/level_control.gd" id="2"]
 
 [sub_resource type="CylinderShape3D" id="1"]
@@ -8,7 +8,6 @@ height = 0.12802
 radius = 6.34827
 
 [sub_resource type="BoxShape3D" id="2"]
-size = Vector3(5.05438, 1, 1)
 
 [node name="World" type="Node3D"]
 script = ExtResource("2")
@@ -25,12 +24,18 @@ size = 16.0
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.731723, 0.32163, 0.600946, -0.681603, 0.345281, 0.645135, 0, -0.881666, 0.471874, -6.25808, 4.05128, 11)
 
-[node name="Cylinder base" type="Node3D" parent="."]
+[node name="Mouseover" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.4114, 16.2443)
+target_position = Vector3(0, -15, -15)
+
+[node name="Cylinder" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7, 0)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Cylinder base"]
+[node name="Ring" type="Node3D" parent="Cylinder"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cylinder base/StaticBody3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Cylinder"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cylinder/StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.07, 0)
 shape = SubResource("1")
 
@@ -42,6 +47,7 @@ collision_layer = 0
 collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Spawner/RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.18508)
 shape = SubResource("2")
 
 [node name="SpawnTimer" type="Timer" parent="."]
