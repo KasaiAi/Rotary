@@ -23,13 +23,7 @@ func _ready():
 
 func _process(_delta):
 	pass
-#	if not RigidBody_collision_detected
-#		translation.y -= .3
+#	if raycast colidir
+#		acende
 
 
-	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(_delta):
-##	cellType = randi() % 4
-##	print(cellType)
-#	pass

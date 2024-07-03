@@ -1,14 +1,17 @@
 extends Node3D
 
-var starting = true
-
 @export var maxRings = 8
 @export var ringSize = 20
 @export var spawnRotationAngle= 0.314159
 @export var ringOffset = 5
 @export var initialSpawn = 7
 @export var spawnCD = 0.03
-var all_pieces = []
+var all_pieces:Array
+
+var raycastTarget
+var mousePos
+var rayOrigin
+var rayEnd
 
 var cell = load("res://Objects/cell.tscn")
 var cellType
@@ -18,7 +21,7 @@ func _ready():
 	randomize()
 	all_pieces = make_2d_array()
 	
-	spawnTimer.connect("timeout", Callable(self, "_on_spawnTimer_timeout"))
+	spawnTimer.connect("timeout", Callable(self, "_on_spawnTimer_timeout")) #
 	add_child(spawnTimer)
 	
 	spawnTimer.start(spawnCD)
@@ -39,10 +42,8 @@ func spawn_cell():
 	newCell.position = $Spawner.position
 	newCell.rotation = $Spawner.rotation
 	add_child(newCell)
-#	initialSpawn -= 1
-#	if cell_queue <= 0:
-#		spawnTimer.stop()
-#	move_spawn_point()
+#on spawn, add cell to array
+#your array position wil determine your height position
 
 func spawn_ring():
 	for i in 20:
@@ -57,9 +58,31 @@ func _process(_delta):
 		move_spawn_point()
 	if Input.is_action_just_released("drag"):
 		move_spawn_point()
-#	$Mouseover.target_position = globalmouseposition
-#	slightly brighter shade
-#	Raycast? Ia ser massa se funcionasse
+	
+	print(raycast_object())
+
+	mousePos = get_viewport().get_mouse_position()
+	$Mouseover.target_position = Vector3((mousePos.x-300)/40, (-mousePos.y+324)/40, -15)
+
+	print(mousePos)
+	print($Mouseover.target_position)
+	
+#	highlight the hit object
+
+func raycast_object():
+	var spaceState = get_world_3d().get_direct_space_state()
+	
+	mousePos = get_viewport().get_mouse_position()
+	var camera = $Camera3D
+	
+	rayOrigin = camera.project_ray_origin(mousePos)
+	rayEnd = rayOrigin + camera.project_ray_normal(mousePos) * 20
+	var intersect = PhysicsRayQueryParameters3D.create(rayOrigin, rayEnd)
+	var ray = spaceState.intersect_ray(intersect)
+	if ray:
+		return ray.collider
+	return Vector3()
+	
 
 func _on_spawnTimer_timeout():
 	spawn_cell()
@@ -68,11 +91,8 @@ func _on_spawnTimer_timeout():
 		initialSpawn -= 1
 	if initialSpawn <= 0:
 		spawnCD = .7
-		print(initialSpawn)
-#		spawnTimer.start(spawnCD)
+		spawnTimer.start(spawnCD)
 #		spawnTimer.stop()
-
-
 
 #Criar peça no cenário						OK!
 #Criar peça colorida no cenário				OK!
@@ -83,7 +103,9 @@ func _on_spawnTimer_timeout():
 #Travar queda das peças no eixo Y			OK?
 #Fazer com que as peças não quiquem			OK!
 #Fazer com que peças formem um cilindro		OK!
+#Separar spawn inicial do timer constante
 #Criar peça como child do anel mais baixo
+#RAYCAST
 #Rotacionar anel (rotate object, snap)		
 #Deletar peças que combinem (quando soltar mouse e 4+ peças se alinharem)
 #Peças quebram em 4 pedacinhos que caem	
