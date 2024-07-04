@@ -5,7 +5,7 @@ var cellType = randi() % 4 # Número aleatório entre 0 e 4
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var material = $RigidBody3D/Cube.get_surface_override_material(0) # Chama o material da malha
+	var material = $RigidBody3D/Mesh.get_surface_override_material(0) # Chama o material da malha
 	
 	match cellType: # Switch case para as quatro cores
 		0:
@@ -22,6 +22,7 @@ func _ready():
 	$RigidBody3D.position.z += 5.25
 
 func _process(_delta):
+#	$RigidBody3D.collision_mask = grid.j
 	pass
 
 func breakup():

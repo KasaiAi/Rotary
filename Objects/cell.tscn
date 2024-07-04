@@ -24,7 +24,7 @@ _surfaces = [{
 resource_local_to_scene = true
 
 [sub_resource type="BoxShape3D" id="4"]
-size = Vector3(1.30297, 1.97614, 1.98115)
+size = Vector3(1.30297, 2.00284, 1.98115)
 
 [node name="cylinder cell" type="Node3D"]
 script = ExtResource("2")
@@ -37,10 +37,9 @@ axis_lock_angular_y = true
 axis_lock_angular_z = true
 physics_material_override = SubResource("1")
 
-[node name="Cube" type="MeshInstance3D" parent="RigidBody3D"]
+[node name="Mesh" type="MeshInstance3D" parent="RigidBody3D"]
 mesh = SubResource("3")
 surface_material_override/0 = SubResource("StandardMaterial3D_wnuq8")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01798, 0)
 shape = SubResource("4")
