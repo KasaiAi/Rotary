@@ -23,7 +23,12 @@ func _ready():
 
 func _process(_delta):
 	pass
-#	if raycast colidir
-#		acende
+
+func breakup():
+#	spawn 4 minicubes, not as children (particles?)
+#	throw them up (maybe random directions)
+#	queue_free()
+	pass
+
 
 
