@@ -22,7 +22,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7, 0)
 visible = false
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
+transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 7, 20)
 projection = 1
 size = 16.0
 
@@ -39,6 +39,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7, 0)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Cylinder/Ring1/Floor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 shape = SubResource("1")
+
+[node name="Cell container" type="Node" parent="Cylinder/Ring1"]
 
 [node name="Ring2" type="Node3D" parent="Cylinder"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
@@ -114,7 +116,7 @@ shape = SubResource("1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
 
 [node name="Killer" type="Area3D" parent="Spawner"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.18598)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.25)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Spawner/Killer"]
 shape = SubResource("BoxShape3D_j3kkm")
@@ -132,4 +134,5 @@ modulate = Color(0, 0, 0, 0.666667)
 pixel_size = 0.0295
 texture = SubResource("CanvasTexture_fqpv1")
 
+[connection signal="body_entered" from="Spawner/Killer" to="." method="_on_killer_body_entered"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_SpawnTimer_timeout"]

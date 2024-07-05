@@ -26,7 +26,7 @@ resource_local_to_scene = true
 [sub_resource type="BoxShape3D" id="4"]
 size = Vector3(1.30297, 2.00284, 1.98115)
 
-[node name="cylinder cell" type="Node3D"]
+[node name="Cell" type="Node3D" groups=["cells"]]
 script = ExtResource("2")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]

@@ -39,14 +39,18 @@ func startup():
 func _on_SpawnTimer_timeout():
 	spawn_cell()
 	move_spawn_point()
-	startup()
+	startup() #Ineficiente, queria fazer o spawn inicial de X peças e depois esquecer essa função
+#	gameover() 
 
 func spawn_cell():
 	var newCell = cell.instantiate()
-	newCell.position = $Spawner.position
+	newCell.position = $Spawner/Killer.global_position
+#	newCell.position = $Spawner.position
+#	newCell.position.z = $Spawner.position.z + 5.25
 	newCell.rotation = $Spawner.rotation
 	add_child(newCell)
 #	append cell to array
+#	set cell as child of a ring
 #	set collision_mask to array.j
 
 func spawn_ring():
@@ -56,20 +60,27 @@ func spawn_ring():
 
 func move_spawn_point():
 	$Spawner.rotate(Vector3(0,1,0),PI/10)
-	print($Spawner.rotation.y)
 #	if collide with cell:
 #		game over
 
 func _process(_delta):
-	if Input.is_action_just_pressed("ui_down"):
+	if Input.is_action_just_pressed("ui_select"):
 		spawn_ring()
+	if Input.is_action_just_pressed("ui_down"):
+		spawn_cell()
+	if Input.is_action_just_pressed("ui_left"):
+		$Spawner.rotate(Vector3(0,1,0),-PI/10)
+	if Input.is_action_just_pressed("ui_right"):
+		move_spawn_point()
 	if Input.is_action_just_released("click"):
+		if raycast_object().is_in_group("cells"):
+			raycast_object().breakup()
 		spawn_cell()
 		move_spawn_point()
-	if Input.is_action_pressed("click"):
-		raycast_object()
-	if Input.is_action_just_released("drag"):
-		move_spawn_point()
+	
+	print(raycast_object())
+#	if Input.is_action_just_released("drag"):
+#		spin()
 	
 	mousePos = get_viewport().get_mouse_position()
 	$Mouseover.target_position = Vector3((mousePos.x-300)/40, (-mousePos.y+324)/40, -15)
@@ -89,8 +100,10 @@ func raycast_object():
 	var ray = spaceState.intersect_ray(intersect)
 	
 	if ray.has("collider"):
-#		return ray.collider.get_parent()
-		ray.collider.get_parent().free()
+		return ray.collider.get_parent()
+
+func _on_killer_body_entered(body):
+	print("perdeu")
 
 #Criar peça no cenário						OK!
 #Criar peça colorida no cenário				OK!
@@ -100,10 +113,18 @@ func raycast_object():
 #Travar queda das peças no eixo Y			OK?
 #Fazer com que as peças não quiquem			OK!
 #Fazer com que peças formem um cilindro		OK!
+#Organizar criação de peça em uma função	OK!
 #Upgrade pra 4.1							OK!
 #Segmentar funções melhor					OK!
+#Não dá pra diferenciar as peças de trás das da frente	OK!
 #Ajeitar a função do timer					OK!
 #Separar spawn inicial do spawn constante	OK!
+#Mover script de spawn pra o spawner		OK!
+#Iluminar as peças com hover				OK!
+
+#Criar objeto Ring com caixa de colisão
+#Raycast é bloqueado pelos colisores dos anéis
+#Apagar as peças sem hover
 
 #Fazer algo quando peças chegarem no topo	
 #	Spawn segura as peças até formar um anel ou solta uma por uma? Crucial pro fim de jogo
@@ -133,9 +154,9 @@ func raycast_object():
 #Inserir anel de peças novas após algum tempo
 #Rotacionar câmera em um eixo (full cylinder node)
 
-#Organizar criação de peça em uma função	OK!
+#Melhorar as cores
+#Tentar embaralhar mais as peças?
+
 #Consertar o bug do cubo extra no cell.tscn	OK!
 #Impedir que peças em queda empurrem as de baixo
-#Melhorar as cores
-#Tentar embaralhar mais as peças
-#Não dá pra diferenciar as peças de trás das da frente
+#Às vezes peças congelam quando as de baixo são deletadas
