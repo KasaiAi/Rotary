@@ -1,11 +1,14 @@
 extends Node3D
 
 func _on_area_entered():
-	for i in $Cells.get_children():
-		$"Cell container/Cell/RigidBody3D/Mesh".material_overlay = load("res://Assets/Materials/selection_highlight.tres")
+	for i in $"Cell container".get_children():
+		if i.is_in_group("cells"):
+			i.get_node("Mesh").material_overlay = load("res://Assets/Materials/selection_highlight.tres")
 		
 func _on_area_exited():
-	$"Cell container/Cell/RigidBody3D/Mesh".material_overlay = null
+	for i in $"Cell container".get_children():
+		if i.is_in_group("cells"):
+			i.get_node("Mesh").material_overlay = null
 
 
 #cLIecK

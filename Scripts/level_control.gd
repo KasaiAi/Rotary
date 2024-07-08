@@ -44,13 +44,12 @@ func _on_SpawnTimer_timeout():
 
 func spawn_cell():
 	var newCell = cell.instantiate()
-	newCell.position = $Spawner/Killer.global_position
-#	newCell.position = $Spawner.position
-#	newCell.position.z = $Spawner.position.z + 5.25
-	newCell.rotation = $Spawner.rotation
-	add_child(newCell)
+	newCell.transform = $Spawner.transform
+	newCell.translate_object_local(Vector3(0,0,5.25))
+	
+	$Cylinder/Ring.add_child(newCell)
 #	append cell to array
-#	set cell as child of a ring
+#	set cell as child of a ring by level -> match position.y < X > position.y: remove_child(), add_child()
 #	set collision_mask to array.j
 
 func spawn_ring():
@@ -73,12 +72,13 @@ func _process(_delta):
 	if Input.is_action_just_pressed("ui_right"):
 		move_spawn_point()
 	if Input.is_action_just_released("click"):
-		if raycast_object().is_in_group("cells"):
-			raycast_object().breakup()
+		var selected = raycast_object()
+		if selected != null and selected.is_in_group("cells"):
+			selected.breakup()
 		spawn_cell()
 		move_spawn_point()
 	
-	print(raycast_object())
+#	print(raycast_object())
 #	if Input.is_action_just_released("drag"):
 #		spin()
 	
@@ -93,16 +93,16 @@ func raycast_object():
 	var camera = $Camera3D
 	
 	rayOrigin = camera.project_ray_origin(mousePos)
-#	try a fixed origin, far from the target
 	rayEnd = rayOrigin + camera.project_ray_normal(mousePos) * 200
 	
 	var intersect = PhysicsRayQueryParameters3D.create(rayOrigin, rayEnd)
+	intersect.collide_with_areas = true
 	var ray = spaceState.intersect_ray(intersect)
 	
 	if ray.has("collider"):
-		return ray.collider.get_parent()
+		return ray.collider
 
-func _on_killer_body_entered(body):
+func _on_killer_body_entered(_body):
 	print("perdeu")
 
 #Criar peça no cenário						OK!
@@ -121,10 +121,14 @@ func _on_killer_body_entered(body):
 #Separar spawn inicial do spawn constante	OK!
 #Mover script de spawn pra o spawner		OK!
 #Iluminar as peças com hover				OK!
+#Melhorar a posição de spawn				OK!
+#Mudei a hierarquia de do cubo				OK!
+#Criar objeto Ring com caixa de colisão		OK!
 
-#Criar objeto Ring com caixa de colisão
+#Deixar a cor dos cubinhos igual ao original
 #Raycast é bloqueado pelos colisores dos anéis
 #Apagar as peças sem hover
+#Melhorar o posicionamento do killer
 
 #Fazer algo quando peças chegarem no topo	
 #	Spawn segura as peças até formar um anel ou solta uma por uma? Crucial pro fim de jogo
