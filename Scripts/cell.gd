@@ -28,7 +28,7 @@ func breakup():
 	for i in 8:
 		var cellBit = smolCell.instantiate()
 		cellBit.transform = transform
-		cellBit.translate_object_local(Vector3(randi_range(-.5, .5),1,randi_range(-1, 1)))
+		cellBit.translate_object_local(Vector3(randi_range(-1, 1),1,randi_range(-1, 1)))
 		cellBit.get_node("Mesh").get_surface_override_material(0).albedo_color = $Mesh.get_surface_override_material(0).albedo_color
 		get_parent().add_child(cellBit)
 	queue_free()

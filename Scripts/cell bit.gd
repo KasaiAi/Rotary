@@ -7,7 +7,7 @@ func _ready():
 	#explosão de pedacinhos
 	apply_central_impulse(Vector3(randf_range(-5,5),10,randf_range(-5,5)))
 
-func _process(delta):
+func _process(_delta):
 	#limpeza de objetos fora de tela
 	if position.y < -25:
 		queue_free()

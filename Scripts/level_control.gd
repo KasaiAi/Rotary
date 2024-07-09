@@ -63,6 +63,12 @@ func move_spawn_point():
 #		game over
 
 func _process(_delta):
+	var selected = raycast_object()
+	
+	if Input.is_action_just_pressed("click"):
+		if selected.is_in_group("rings"):
+			selected.drag()
+	
 	if Input.is_action_just_pressed("ui_select"):
 		spawn_ring()
 	if Input.is_action_just_pressed("ui_down"):
@@ -72,18 +78,18 @@ func _process(_delta):
 	if Input.is_action_just_pressed("ui_right"):
 		move_spawn_point()
 	if Input.is_action_just_released("click"):
-		var selected = raycast_object()
 		if selected != null and selected.is_in_group("cells"):
 			selected.breakup()
 		spawn_cell()
 		move_spawn_point()
 	
+	print(selected)
 #	print(raycast_object())
 #	if Input.is_action_just_released("drag"):
 #		spin()
 	
-	mousePos = get_viewport().get_mouse_position()
-	$Mouseover.target_position = Vector3((mousePos.x-300)/40, (-mousePos.y+324)/40, -15)
+#	mousePos = get_viewport().get_mouse_position()
+#	$Mouseover.target_position = Vector3((mousePos.x-300)/40, (-mousePos.y+324)/40, -15)
 	
 #	highlight the collider
 
@@ -102,6 +108,10 @@ func raycast_object():
 	
 	if ray.has("collider"):
 		return ray.collider
+
+func drag():
+	var origin = mousePos.x
+	
 
 #game over
 func _on_killer_body_entered(_body):
@@ -156,6 +166,8 @@ func _on_killer_body_entered(_body):
 #	depois da primeira quebra dá pra combar
 #Atualizar o grid após mover as peças
 
+#Melhorar a interação do killer
+
 #Melhorar as cores
 #Tentar embaralhar mais as peças?
 
@@ -163,4 +175,4 @@ func _on_killer_body_entered(_body):
 #Impedir que peças em queda empurrem as de baixo
 #Às vezes peças congelam quando as de baixo são deletadas
 #Raycast é bloqueado pelos colisores dos anéis
-#Melhorar o posicionamento do killer
+#Consertar iluminação
