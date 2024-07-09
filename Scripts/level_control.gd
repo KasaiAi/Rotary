@@ -47,7 +47,7 @@ func spawn_cell():
 	newCell.transform = $Spawner.transform
 	newCell.translate_object_local(Vector3(0,0,5.25))
 	
-	$Cylinder/Ring.add_child(newCell)
+	add_child(newCell)
 #	append cell to array
 #	set cell as child of a ring by level -> match position.y < X > position.y: remove_child(), add_child()
 #	set collision_mask to array.j
@@ -87,6 +87,7 @@ func _process(_delta):
 	
 #	highlight the collider
 
+#raycaster
 func raycast_object():
 	var spaceState = get_world_3d().direct_space_state
 	mousePos = get_viewport().get_mouse_position()
@@ -102,6 +103,7 @@ func raycast_object():
 	if ray.has("collider"):
 		return ray.collider
 
+#game over
 func _on_killer_body_entered(_body):
 	print("perdeu")
 
@@ -120,26 +122,27 @@ func _on_killer_body_entered(_body):
 #Ajeitar a função do timer					OK!
 #Separar spawn inicial do spawn constante	OK!
 #Mover script de spawn pra o spawner		OK!
-#Iluminar as peças com hover				OK!
 #Melhorar a posição de spawn				OK!
 #Mudei a hierarquia de do cubo				OK!
 #Criar objeto Ring com caixa de colisão		OK!
+#Peças quebram em pedacinhos que caem		OK!
+#Deletar destroços que saem da tela			OK!
+#Deixar a cor dos minicubos igual ao original	OK!
+#Girar anel com o mouse
+#Girar cilindro com o mouse
+#Rotacionar anel c/ snapping
+#Iluminar objetos com hover
+#Apagar objetos sem hover
 
-#Deixar a cor dos cubinhos igual ao original
-#Raycast é bloqueado pelos colisores dos anéis
-#Apagar as peças sem hover
-#Melhorar o posicionamento do killer
+#Colocar peça como child do anel pela altura
 
 #Fazer algo quando peças chegarem no topo	
 #	Spawn segura as peças até formar um anel ou solta uma por uma? Crucial pro fim de jogo
+#	Prefiro soltar uma por uma, dá mais tempo de tensão
 
-#drag
-#destroy
-#cylinder turn
-#Rotacionar anel c/ snapping
+#Destruição de peças iguais adjacentes
 
 #Fazer um array que adicione as peças criadas
-#Colocar peça como child do anel de acordo com a altura
 
 #Organizar peças por nível e como fazer elas quebrarem
 #	um array deve facilitar pra comparar as peças próximas
@@ -151,12 +154,7 @@ func _on_killer_body_entered(_body):
 #	se for automático vai ficar uma bagunça
 #	clicar e segurar move o anel, clique rápido quebra peças semelhantes
 #	depois da primeira quebra dá pra combar
-
-#Peças quebram em 4 pedacinhos que caem
-#Deletar destroços que saem da tela
-#Quando peças são quebradas ou movidas as de cima podem cair
-#Inserir anel de peças novas após algum tempo
-#Rotacionar câmera em um eixo (full cylinder node)
+#Atualizar o grid após mover as peças
 
 #Melhorar as cores
 #Tentar embaralhar mais as peças?
@@ -164,3 +162,5 @@ func _on_killer_body_entered(_body):
 #Consertar o bug do cubo extra no cell.tscn	OK!
 #Impedir que peças em queda empurrem as de baixo
 #Às vezes peças congelam quando as de baixo são deletadas
+#Raycast é bloqueado pelos colisores dos anéis
+#Melhorar o posicionamento do killer

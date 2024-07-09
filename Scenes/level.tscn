@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://6fx1sm06vjv6"]
 
-[ext_resource type="PackedScene" uid="uid://eu6w7qfmvc2y" path="res://Assets/Models/ref cylinder.glb" id="1"]
+[ext_resource type="PackedScene" uid="uid://cbr2d1uq7tv5j" path="res://Assets/Models/ref cylinder.glb" id="1"]
 [ext_resource type="Script" path="res://Scripts/level_control.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://yrxljf6l4x0d" path="res://Objects/ring.tscn" id="3_0jacf"]
-[ext_resource type="Texture2D" uid="uid://qilkrh46aof2" path="res://Assets/depth fade.png" id="3_rpk6y"]
+[ext_resource type="Texture2D" uid="uid://doseaiufyo16h" path="res://Assets/depth fade.png" id="3_rpk6y"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j3kkm"]
 

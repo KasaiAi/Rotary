@@ -1,9 +1,7 @@
-extends Node3D
+extends RigidBody3D
 
-# Declare member variables here. Examples:
 var cellType = randi() % 4 # Número aleatório entre 0 e 4
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 #	$RigidBody3D/Mesh.material_override = StandardMaterial3D.new() #Cria novo material pra a célula
 	var material = $Mesh.get_surface_override_material(0) # Chama o material da célula
@@ -20,24 +18,22 @@ func _ready():
 		3:
 			material.albedo_color = Color(0.83,0.78,0.1) # Yellow
 	
+#	Pode começar com freeze = true e soltar a peça depois de 1 segundo
 #	$RigidBody3D.collision_mask = grid.j #Define a camada de colisão/nível da célula de acordo com o array de peças
 
+#flavor de destruição das peças; cria vários fragmentos que caem
 func breakup():
-	var smolCell = load("res://Objects/cell.tscn")
+	var smolCell = load("res://Objects/cell bit.tscn")
 #	spawn 4 minicubes, not as children (particles?)
-	for i in 4:
+	for i in 8:
 		var cellBit = smolCell.instantiate()
 		cellBit.transform = transform
-		cellBit.get_node("Mesh").scale = Vector3(.5,.5,.5)
-		cellBit.collision_mask = 0
-		cellBit.collision_layer = 0
+		cellBit.translate_object_local(Vector3(randi_range(-.5, .5),1,randi_range(-1, 1)))
+		cellBit.get_node("Mesh").get_surface_override_material(0).albedo_color = $Mesh.get_surface_override_material(0).albedo_color
 		get_parent().add_child(cellBit)
 	queue_free()
-#	throw them up (maybe random directions)
 
-func _process(delta):
-	if position.y < -25:
-		queue_free()
+#func _process(delta):
 
 #	if Input.is_action_just_pressed("ui_left"):
 #		reparent(get_parent().get_parent().get_node("Ring"))

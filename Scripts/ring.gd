@@ -1,5 +1,8 @@
 extends Node3D
 
+var selected = false
+
+
 func _on_area_entered():
 	for i in $"Cell container".get_children():
 		if i.is_in_group("cells"):

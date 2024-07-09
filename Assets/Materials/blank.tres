@@ -1,5 +1,4 @@
 [gd_resource type="StandardMaterial3D" format=3 uid="uid://dprwrb4xxfk8j"]
 
 [resource]
-resource_local_to_scene = true
 emission_enabled = true
