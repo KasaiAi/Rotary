@@ -25,6 +25,8 @@ shape = SubResource("1")
 shape = SubResource("CylinderShape3D_5f8wq")
 
 [node name="dragger" parent="." instance=ExtResource("2_13h7d")]
+process_mode = 4
+triggerAction = "click"
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

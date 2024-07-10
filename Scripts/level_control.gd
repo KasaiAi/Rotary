@@ -78,12 +78,6 @@ func _process(_delta):
 			object.breakup()
 		spawn_cell()
 		move_spawn_point()
-		
-	if Input.is_action_just_pressed("drag"):
-		$Cylinder/dragger.origin = get_viewport().get_mouse_position().x
-		$Cylinder/dragger.rotating = true
-	if Input.is_action_just_released("drag"):
-		$Cylinder/dragger.rotating = false
 	
 #	print(object)
 #	print(raycast_object())
