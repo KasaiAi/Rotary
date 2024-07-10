@@ -47,7 +47,7 @@ func spawn_cell():
 	newCell.transform = $Spawner.transform
 	newCell.translate_object_local(Vector3(0,0,5.25))
 	
-	$Cylinder/Ring.add_child(newCell)
+	add_child(newCell)
 #	append cell to array
 #	set cell as child of a ring by level -> match position.y < X > position.y: remove_child(), add_child()
 #	set collision_mask to array.j
@@ -134,13 +134,16 @@ func _on_killer_body_entered(_body):
 #Peças quebram em pedacinhos que caem		OK!
 #Deletar destroços que saem da tela			OK!
 #Deixar a cor dos minicubos igual ao original	OK!
-#Girar anel com o mouse
-#Girar cilindro com o mouse
-#Rotacionar anel c/ snapping
-#Iluminar objetos com hover
-#Apagar objetos sem hover
+#Girar anel com o mouse						OK!
+#Girar cilindro com o mouse					OK!
+#Iluminar objetos com hover					OK!
+#Apagar objetos sem hover					OK!
+#Remover cubinhos da árvore na criação
 
-#Colocar peça como child do anel pela altura
+#Adicionar peças criadas num array
+#Tornar peça filha do anel onde aterrissar
+#Rotacionar anel c/ snapping
+
 
 #Fazer algo quando peças chegarem no topo	
 #	Spawn segura as peças até formar um anel ou solta uma por uma? Crucial pro fim de jogo
@@ -148,7 +151,9 @@ func _on_killer_body_entered(_body):
 
 #Destruição de peças iguais adjacentes
 
-#Fazer um array que adicione as peças criadas
+#fragmentos têm que ser removidos da árvore pra não serem afetados pela rotação
+#a física travar durante a rotação pode ser genial pra os cubos não caírem antes de você soltar o mouse (o problema é que eles caem com força depois)
+#cubos têm que entrar no array/virar filhos quando aterrissarem, senão eles são afetados pela rotação enquanto caem
 
 #Organizar peças por nível e como fazer elas quebrarem
 #	um array deve facilitar pra comparar as peças próximas

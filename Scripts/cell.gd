@@ -30,7 +30,7 @@ func breakup():
 		cellBit.transform = transform
 		cellBit.translate_object_local(Vector3(randi_range(-1, 1),1,randi_range(-1, 1)))
 		cellBit.get_node("Mesh").get_surface_override_material(0).albedo_color = $Mesh.get_surface_override_material(0).albedo_color
-		get_parent().add_child(cellBit)
+		add_sibling(cellBit)
 	queue_free()
 
 #func _process(delta):
