@@ -47,7 +47,7 @@ func spawn_cell():
 	newCell.transform = $Spawner.transform
 	newCell.translate_object_local(Vector3(0,0,5.25))
 	
-	add_child(newCell)
+	$Cylinder/Ring.add_child(newCell)
 #	append cell to array
 #	set cell as child of a ring by level -> match position.y < X > position.y: remove_child(), add_child()
 #	set collision_mask to array.j
@@ -63,12 +63,8 @@ func move_spawn_point():
 #		game over
 
 func _process(_delta):
-	var selected = raycast_object()
-	
-	if Input.is_action_just_pressed("click"):
-		if selected.is_in_group("rings"):
-			selected.drag()
-	
+	var object = raycast_object()
+
 	if Input.is_action_just_pressed("ui_select"):
 		spawn_ring()
 	if Input.is_action_just_pressed("ui_down"):
@@ -78,14 +74,20 @@ func _process(_delta):
 	if Input.is_action_just_pressed("ui_right"):
 		move_spawn_point()
 	if Input.is_action_just_released("click"):
-		if selected != null and selected.is_in_group("cells"):
-			selected.breakup()
+		if object != null and object.is_in_group("cells"):
+			object.breakup()
 		spawn_cell()
 		move_spawn_point()
+		
+	if Input.is_action_just_pressed("drag"):
+		$Cylinder/dragger.origin = get_viewport().get_mouse_position().x
+		$Cylinder/dragger.rotating = true
+	if Input.is_action_just_released("drag"):
+		$Cylinder/dragger.rotating = false
 	
-	print(selected)
+#	print(object)
 #	print(raycast_object())
-#	if Input.is_action_just_released("drag"):
+#	if Input.is_action_just_pressed("drag"):
 #		spin()
 	
 #	mousePos = get_viewport().get_mouse_position()

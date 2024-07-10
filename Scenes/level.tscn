@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://6fx1sm06vjv6"]
+[gd_scene load_steps=8 format=3 uid="uid://6fx1sm06vjv6"]
 
 [ext_resource type="PackedScene" uid="uid://eu6w7qfmvc2y" path="res://Assets/Models/ref cylinder.glb" id="1"]
 [ext_resource type="Script" path="res://Scripts/level_control.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://yrxljf6l4x0d" path="res://Objects/ring.tscn" id="3_0jacf"]
 [ext_resource type="Texture2D" uid="uid://qilkrh46aof2" path="res://Assets/depth fade.png" id="3_rpk6y"]
+[ext_resource type="PackedScene" uid="uid://db0b0d56w4t7e" path="res://Behaviors/drag.tscn" id="4_vshgj"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j3kkm"]
 
@@ -12,7 +13,7 @@ diffuse_texture = ExtResource("3_rpk6y")
 
 [node name="World" type="Node3D"]
 script = ExtResource("2")
-initialSpawn = 0
+initialSpawn = 20
 
 [node name="ref cylinder" parent="." instance=ExtResource("1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7, 0)
@@ -33,6 +34,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7, 0)
 
 [node name="Ring2" parent="Cylinder" instance=ExtResource("3_0jacf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+
+[node name="dragger" parent="Cylinder" instance=ExtResource("4_vshgj")]
 
 [node name="Spawner" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
