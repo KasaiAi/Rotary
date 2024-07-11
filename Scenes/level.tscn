@@ -13,7 +13,6 @@ diffuse_texture = ExtResource("3_rpk6y")
 
 [node name="World" type="Node3D"]
 script = ExtResource("2")
-initialSpawn = 20
 
 [node name="ref cylinder" parent="." instance=ExtResource("1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7, 0)

@@ -27,16 +27,10 @@ func breakup():
 #	spawn 4 minicubes, not as children (particles?)
 	for i in 8:
 		var cellBit = smolCell.instantiate()
-		cellBit.transform = transform
+		cellBit.transform = global_transform
 		cellBit.translate_object_local(Vector3(randi_range(-1, 1),1,randi_range(-1, 1)))
 		cellBit.get_node("Mesh").get_surface_override_material(0).albedo_color = $Mesh.get_surface_override_material(0).albedo_color
-		add_sibling(cellBit)
+		get_tree().root.get_child(0).add_child(cellBit)
 	queue_free()
 
 #func _process(delta):
-
-#	if Input.is_action_just_pressed("ui_left"):
-#		reparent(get_parent().get_parent().get_node("Ring"))
-#	if Input.is_action_just_pressed("ui_right"):
-#		reparent(get_parent().get_parent().get_node("Ring2"))
-#	print(get_parent())

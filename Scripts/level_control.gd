@@ -2,7 +2,6 @@ extends Node3D
 
 @export var maxRings = 8
 @export var ringSize = 20
-@export var initialSpawn = 100
 var grid:Array
 
 var raycastTarget
@@ -16,11 +15,12 @@ var cellType
 
 func _ready():
 	randomize()
-	grid = make_2d_array()
+	grid = create_array()
+	print(grid)
 	
-	$SpawnTimer.start(0.03)
+	startup(20)
 
-func make_2d_array():
+func create_array():
 	var array = []
 	for i in ringSize:
 		array.append([])
@@ -28,27 +28,35 @@ func make_2d_array():
 			array[i].append(null)
 	return array
 
-func startup():
+func startup(initialSpawn):#initialSpawn
 	if initialSpawn > 0:
+		$SpawnTimer.start(0.03)
+		await $SpawnTimer.timeout
 		initialSpawn -= 1
-		$SpawnTimer.start(.03)
+		startup(initialSpawn)
 	if initialSpawn <= 0:
 		$SpawnTimer.start(.7)
 		$SpawnTimer.stop()
 
 func _on_SpawnTimer_timeout():
+#	await get_tree().create_timer(1).timeout
 	spawn_cell()
 	move_spawn_point()
-	startup() #Ineficiente, queria fazer o spawn inicial de X peças e depois esquecer essa função
 #	gameover() 
 
-func spawn_cell():
+func spawn_cell():#amount
+#	for i in amount:
 	var newCell = cell.instantiate()
-	newCell.transform = $Spawner.transform
+	newCell.transform = $Spawner.global_transform
 	newCell.translate_object_local(Vector3(0,0,5.25))
 	
 	add_child(newCell)
-#	append cell to array
+	
+#	for i in ringSize:
+#		for j in maxRings:
+#			if grid[i, j] == null:
+#				print(Vector2(i, j))
+#	upon landing, append cell to array
 #	set cell as child of a ring by level -> match position.y < X > position.y: remove_child(), add_child()
 #	set collision_mask to array.j
 
@@ -138,7 +146,8 @@ func _on_killer_body_entered(_body):
 #Girar cilindro com o mouse					OK!
 #Iluminar objetos com hover					OK!
 #Apagar objetos sem hover					OK!
-#Remover cubinhos da árvore na criação
+#Criar cubinhos como filhos do mundo		OK!
+#Fazer a função startup funcionar como eu quero	OK!
 
 #Adicionar peças criadas num array
 #Tornar peça filha do anel onde aterrissar

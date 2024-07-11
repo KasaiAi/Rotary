@@ -23,6 +23,7 @@ shape = SubResource("1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CylinderShape3D_5f8wq")
+disabled = true
 
 [node name="dragger" parent="." instance=ExtResource("2_13h7d")]
 process_mode = 4
