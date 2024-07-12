@@ -9,16 +9,16 @@ var mousePos
 var rayOrigin
 var rayEnd
 
-var cell = load("res://Objects/cell.tscn")
+var cellObject = load("res://Objects/cell.tscn")
 var cellType
 #var cellID
 
 func _ready():
 	randomize()
 	grid = create_array()
-	print(grid)
+#	print(grid)
 	
-	startup(20)
+	startup(0)
 
 func create_array():
 	var array = []
@@ -41,34 +41,57 @@ func startup(initialSpawn):#initialSpawn
 func _on_SpawnTimer_timeout():
 #	await get_tree().create_timer(1).timeout
 	spawn_cell()
-	move_spawn_point()
-#	gameover() 
 
-func spawn_cell():#amount
-#	for i in amount:
-	var newCell = cell.instantiate()
-	newCell.transform = $Spawner.global_transform
-	newCell.translate_object_local(Vector3(0,0,5.25))
-	
-	add_child(newCell)
-	
-#	for i in ringSize:
-#		for j in maxRings:
-#			if grid[i, j] == null:
-#				print(Vector2(i, j))
+func spawn_cell(amount:int = 1):
+	for i in amount:
+		var newCell = cellObject.instantiate()
+		newCell.transform = $Spawner.global_transform
+		newCell.translate_object_local(Vector3(0,0,5.25))
+		
+#		addCellToArray(newCell)
+		newCell.connect("landed", _on_cell_landing)
+		add_child(newCell)
+		move_spawn_point()
+
+func addCellToArray(newCell):
+	for width in ringSize:
+		for height in maxRings:
+			if grid[width][height] == null:
+				grid[width][height] = newCell
+				print(grid)
+				return
+
+func _on_cell_landing(cell):
+	var level = roundi(cell.global_position.y/2)+1
+	print("layer ", level)
+#
+#	match level:
+#		8:
+#			print("layer 8")
+#		7:
+#			print("layer 7")
+#		6:
+#			print("layer 6")
+#		5:
+#			print("layer 5")
+#		4:
+#			print("layer 4")
+#		3:
+#			print("layer 3")
+#		2:
+#			print("layer 2")
+#		1:
+#			print("layer 1")
+
 #	upon landing, append cell to array
 #	set cell as child of a ring by level -> match position.y < X > position.y: remove_child(), add_child()
 #	set collision_mask to array.j
 
 func spawn_ring():
-	for i in 20:
-		spawn_cell()
-		move_spawn_point()
+	spawn_cell(20)
 
 func move_spawn_point():
 	$Spawner.rotate(Vector3(0,1,0),PI/10)
-#	if collide with cell:
-#		game over
 
 func _process(_delta):
 	var object = raycast_object()
@@ -85,7 +108,6 @@ func _process(_delta):
 		if object != null and object.is_in_group("cells"):
 			object.breakup()
 		spawn_cell()
-		move_spawn_point()
 	
 #	print(object)
 #	print(raycast_object())
@@ -95,7 +117,7 @@ func _process(_delta):
 #	mousePos = get_viewport().get_mouse_position()
 #	$Mouseover.target_position = Vector3((mousePos.x-300)/40, (-mousePos.y+324)/40, -15)
 	
-#	highlight the collider
+#	highlight the collider's entire row
 
 #raycaster
 func raycast_object():
@@ -113,13 +135,15 @@ func raycast_object():
 	if ray.has("collider"):
 		return ray.collider
 
-func drag():
-	var origin = mousePos.x
-	
-
 #game over
 func _on_killer_body_entered(_body):
-	print("perdeu")
+	print("perigo")
+#	camada 9 é zona de risco, todas essas peças piscam em alerta
+#	if perigo and spawn_cell():
+#		game over
+#	get_tree().paused = true
+#	screen fade
+#	gameover message and retry
 
 #Criar peça no cenário						OK!
 #Criar peça colorida no cenário				OK!
@@ -149,7 +173,7 @@ func _on_killer_body_entered(_body):
 #Criar cubinhos como filhos do mundo		OK!
 #Fazer a função startup funcionar como eu quero	OK!
 
-#Adicionar peças criadas num array
+#Adicionar peças criadas num array			OK?
 #Tornar peça filha do anel onde aterrissar
 #Rotacionar anel c/ snapping
 

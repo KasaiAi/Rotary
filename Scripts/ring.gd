@@ -15,7 +15,7 @@ func _process(delta):
 				i.get_node("Mesh").material_overlay = load("res://Assets/Materials/selection_highlight.tres")
 		
 		if Input.is_action_just_pressed("click"):
-			$dragger.process_mode = 0
+			$dragger.process_mode = Node.PROCESS_MODE_INHERIT
 		
 	else:
 		for i in get_children():

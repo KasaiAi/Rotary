@@ -1,6 +1,9 @@
 extends RigidBody3D
 
 var cellType = randi() % 4 # Número aleatório entre 0 e 4
+var onFloor = false
+
+signal landed
 
 func _ready():
 #	$RigidBody3D/Mesh.material_override = StandardMaterial3D.new() #Cria novo material pra a célula
@@ -33,4 +36,14 @@ func breakup():
 		get_tree().root.get_child(0).add_child(cellBit)
 	queue_free()
 
-#func _process(delta):
+func on_landing():
+	if not onFloor:
+		if $Grounded.is_colliding():
+			emit_signal("landed", self)
+			onFloor = true
+		else:
+			onFloor = false
+
+func _process(_delta):
+		on_landing()
+

@@ -41,3 +41,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_wnuq8")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("4")
+
+[node name="Grounded" type="RayCast3D" parent="."]
+collide_with_areas = true

@@ -19,6 +19,7 @@ config/windows_native_icon="res://Icons/icon.ico"
 [display]
 
 window/size/viewport_width=600
+window/size/viewport_height=900
 
 [input]
 
