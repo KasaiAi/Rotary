@@ -27,7 +27,7 @@ func _ready():
 #flavor de destruição das peças; cria vários fragmentos que caem
 func breakup():
 	var smolCell = load("res://Objects/cell bit.tscn")
-#	spawn 4 minicubes, not as children (particles?)
+#	spawn 4 minicubes, not as children (particles?)	
 	for i in 8:
 		var cellBit = smolCell.instantiate()
 		cellBit.transform = global_transform
@@ -46,4 +46,3 @@ func on_landing():
 
 func _process(_delta):
 		on_landing()
-

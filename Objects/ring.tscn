@@ -13,7 +13,7 @@ radius = 6.35068
 [node name="Ring" type="Area3D" groups=["rings"]]
 script = ExtResource("1_rt7if")
 
-[node name="Cell container" type="Node" parent="."]
+[node name="CellContainer" type="Node" parent="."]
 
 [node name="Floor" type="StaticBody3D" parent="."]
 
@@ -23,7 +23,6 @@ shape = SubResource("1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CylinderShape3D_5f8wq")
-disabled = true
 
 [node name="dragger" parent="." instance=ExtResource("2_13h7d")]
 process_mode = 4

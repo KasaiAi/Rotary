@@ -1,14 +1,16 @@
 extends Node3D
 
-@export var maxRings = 8
-@export var ringSize = 20
+# Grid and array variables
+@export var maxRings = 8	# Height
+@export var ringSize = 20	# Width
 var grid:Array
 
-var raycastTarget
+# Raycast variables
 var mousePos
 var rayOrigin
 var rayEnd
 
+# Cell creation variables
 var cellObject = load("res://Objects/cell.tscn")
 var cellType
 #var cellID
@@ -61,30 +63,33 @@ func addCellToArray(newCell):
 				print(grid)
 				return
 
+# Set cell level according to height in world
 func _on_cell_landing(cell):
-	var level = roundi(cell.global_position.y/2)+1
-	print("layer ", level)
-#
-#	match level:
+	var level = roundi(cell.global_position.y/2)
+	remove_child(cell)
+	
+	match level:
 #		8:
-#			print("layer 8")
+#			perigo
 #		7:
-#			print("layer 7")
+#			$Cylinder/Ring8.add_child(cell)
 #		6:
-#			print("layer 6")
+#			$Cylinder/Ring7.add_child(cell)
 #		5:
-#			print("layer 5")
+#			$Cylinder/Ring6.add_child(cell)
 #		4:
-#			print("layer 4")
+#			$Cylinder/Ring5.add_child(cell)
 #		3:
-#			print("layer 3")
+#			$Cylinder/Ring4.add_child(cell)
 #		2:
-#			print("layer 2")
+#			$Cylinder/Ring3.add_child(cell)
 #		1:
-#			print("layer 1")
+#			$Cylinder/Ring2.add_child(cell)
+		0:
+			$Cylinder/Ring1.add_child(cell)
 
 #	upon landing, append cell to array
-#	set cell as child of a ring by level -> match position.y < X > position.y: remove_child(), add_child()
+
 #	set collision_mask to array.j
 
 func spawn_ring():
@@ -138,55 +143,51 @@ func raycast_object():
 #game over
 func _on_killer_body_entered(_body):
 	print("perigo")
-#	camada 9 é zona de risco, todas essas peças piscam em alerta
+#	camada 8 é zona de risco, todas essas peças piscam em alerta
 #	if perigo and spawn_cell():
 #		game over
 #	get_tree().paused = true
 #	screen fade
 #	gameover message and retry
 
-#Criar peça no cenário						OK!
-#Criar peça colorida no cenário				OK!
-#Criar anel									OK!
-#Criar anel com cores aleatórias			OK!
-#Adicionar rigidbody, peso e chão			OK!
-#Travar queda das peças no eixo Y			OK?
-#Fazer com que as peças não quiquem			OK!
-#Fazer com que peças formem um cilindro		OK!
-#Organizar criação de peça em uma função	OK!
-#Upgrade pra 4.1							OK!
-#Segmentar funções melhor					OK!
+#Criar peça no cenário									OK!
+#Criar peça colorida no cenário							OK!
+#Criar anel												OK!
+#Criar anel com cores aleatórias						OK!
+#Adicionar rigidbody, peso e chão						OK!
+#Travar queda das peças no eixo Y						OK!
+#Fazer com que as peças não quiquem						OK!
+#Fazer com que peças formem um cilindro					OK!
+#Organizar criação de peça em uma função				OK!
+#Upgrade pra 4.1										OK!
+#Segmentar funções melhor								OK!
 #Não dá pra diferenciar as peças de trás das da frente	OK!
-#Ajeitar a função do timer					OK!
-#Separar spawn inicial do spawn constante	OK!
-#Mover script de spawn pra o spawner		OK!
-#Melhorar a posição de spawn				OK!
-#Mudei a hierarquia de do cubo				OK!
-#Criar objeto Ring com caixa de colisão		OK!
-#Peças quebram em pedacinhos que caem		OK!
-#Deletar destroços que saem da tela			OK!
-#Deixar a cor dos minicubos igual ao original	OK!
-#Girar anel com o mouse						OK!
-#Girar cilindro com o mouse					OK!
-#Iluminar objetos com hover					OK!
-#Apagar objetos sem hover					OK!
-#Criar cubinhos como filhos do mundo		OK!
-#Fazer a função startup funcionar como eu quero	OK!
+#Ajeitar a função do timer								OK!
+#Separar spawn inicial do spawn constante				OK!
+#Mover script de spawn pra o spawner					OK!
+#Melhorar a posição de spawn							OK!
+#Mudei a hierarquia de do cubo							OK!
+#Criar objeto Ring com caixa de colisão					OK!
+#Peças quebram em pedacinhos que caem					OK!
+#Deletar destroços que saem da tela						OK!
+#Deixar a cor dos minicubos igual ao original			OK!
+#Girar anel com o mouse									OK!
+#Girar cilindro com o mouse								OK!
+#Iluminar objetos com hover								OK!
+#Apagar objetos sem hover								OK!
+#Criar cubinhos como filhos do mundo					OK!
+#Fazer a função startup funcionar como eu quero			OK!
+#Tornar peça filha do anel onde aterrissar				OK!
+#Rotacionar anel c/ snapping							OK!
 
-#Adicionar peças criadas num array			OK?
-#Tornar peça filha do anel onde aterrissar
-#Rotacionar anel c/ snapping
-
-
-#Fazer algo quando peças chegarem no topo	
-#	Spawn segura as peças até formar um anel ou solta uma por uma? Crucial pro fim de jogo
-#	Prefiro soltar uma por uma, dá mais tempo de tensão
+#Consertar posicionamento da peça quando entra no anel	
+#Mover aneis independentemente							
+#Peças visíveis no topo antes de cair (timer próprio)	
+#Adicionar peças criadas num array						
+#Fazer algo quando peças chegarem no topo				
 
 #Destruição de peças iguais adjacentes
-
-#fragmentos têm que ser removidos da árvore pra não serem afetados pela rotação
-#a física travar durante a rotação pode ser genial pra os cubos não caírem antes de você soltar o mouse (o problema é que eles caem com força depois)
-#cubos têm que entrar no array/virar filhos quando aterrissarem, senão eles são afetados pela rotação enquanto caem
+#Máquina de estados pros cubos ou anéis...
 
 #Organizar peças por nível e como fazer elas quebrarem
 #	um array deve facilitar pra comparar as peças próximas
@@ -207,6 +208,6 @@ func _on_killer_body_entered(_body):
 
 #Consertar o bug do cubo extra no cell.tscn	OK!
 #Impedir que peças em queda empurrem as de baixo
-#Às vezes peças congelam quando as de baixo são deletadas
+#Peças não se movem quando as de baixo somem	OK!
 #Raycast é bloqueado pelos colisores dos anéis
 #Consertar iluminação

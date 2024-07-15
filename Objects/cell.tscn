@@ -32,6 +32,7 @@ size = Vector3(1.30297, 2.00284, 1.98115)
 axis_lock_linear_x = true
 axis_lock_linear_z = true
 physics_material_override = SubResource("1")
+can_sleep = false
 lock_rotation = true
 script = ExtResource("2")
 
@@ -43,4 +44,4 @@ surface_material_override/0 = SubResource("StandardMaterial3D_wnuq8")
 shape = SubResource("4")
 
 [node name="Grounded" type="RayCast3D" parent="."]
-collide_with_areas = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
