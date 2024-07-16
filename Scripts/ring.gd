@@ -29,6 +29,8 @@ func _process(_delta):
 				i.get_node("Mesh").material_overlay = null
 				
 	if Input.is_action_just_released("click"):
+		# Deactivates rotation
+		$dragger.process_mode = Node.PROCESS_MODE_DISABLED
 		# Snaps ring rotation to fixed points
 		if fposmod(rotation_degrees.y, 18) > 9:
 			rotation_degrees.y += 18

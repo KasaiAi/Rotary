@@ -27,8 +27,8 @@ func _ready():
 #flavor de destruição das peças; cria vários fragmentos que caem
 func breakup():
 	var smolCell = load("res://Objects/cell bit.tscn")
-#	spawn 4 minicubes, not as children (particles?)	
 	for i in 8:
+		# Saves parent's position, applies random rotation, copies parent's color, adds minis as children of world node and deletes parent cell
 		var cellBit = smolCell.instantiate()
 		cellBit.transform = global_transform
 		cellBit.translate_object_local(Vector3(randi_range(-1, 1),1,randi_range(-1, 1)))
@@ -37,12 +37,13 @@ func breakup():
 	queue_free()
 
 func on_landing():
+	if onFloor and linear_velocity.y < -1:
+		onFloor = false
 	if not onFloor:
 		if $Grounded.is_colliding():
 			emit_signal("landed", self)
 			onFloor = true
-		else:
-			onFloor = false
 
 func _process(_delta):
 		on_landing()
+		print(rotation.y)

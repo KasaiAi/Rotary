@@ -4,8 +4,11 @@
 [ext_resource type="Script" path="res://Scripts/level_control.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://yrxljf6l4x0d" path="res://Objects/ring.tscn" id="3_0jacf"]
 [ext_resource type="Texture2D" uid="uid://qilkrh46aof2" path="res://Assets/depth fade.png" id="3_rpk6y"]
-[ext_resource type="PackedScene" uid="uid://c47v3dpdoqi13" path="res://Objects/cell.tscn" id="4_4vgax"]
 [ext_resource type="PackedScene" uid="uid://db0b0d56w4t7e" path="res://Behaviors/drag.tscn" id="4_vshgj"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_5xo8e"]
+height = 0.12802
+radius = 6.34827
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j3kkm"]
 
@@ -29,16 +32,37 @@ transform = Transform3D(0.731723, 0.32163, 0.600946, -0.681603, 0.345281, 0.6451
 
 [node name="Cylinder" type="Node3D" parent="."]
 
-[node name="Ring1" parent="Cylinder" instance=ExtResource("3_0jacf")]
+[node name="Level1" parent="Cylinder" instance=ExtResource("3_0jacf")]
 
-[node name="Ring2" parent="Cylinder" instance=ExtResource("3_0jacf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+[node name="Level2" parent="Cylinder" instance=ExtResource("3_0jacf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
-[node name="Cell" parent="Cylinder/Ring2" instance=ExtResource("4_4vgax")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.37687)
+[node name="Level3" parent="Cylinder" instance=ExtResource("3_0jacf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="Level4" parent="Cylinder" instance=ExtResource("3_0jacf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
+
+[node name="Level5" parent="Cylinder" instance=ExtResource("3_0jacf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
+
+[node name="Level6" parent="Cylinder" instance=ExtResource("3_0jacf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+
+[node name="Level7" parent="Cylinder" instance=ExtResource("3_0jacf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12, 0)
+
+[node name="Level8" parent="Cylinder" instance=ExtResource("3_0jacf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14, 0)
 
 [node name="dragger" parent="Cylinder" instance=ExtResource("4_vshgj")]
 triggerAction = "drag"
+
+[node name="Floor" type="StaticBody3D" parent="Cylinder"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cylinder/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("CylinderShape3D_5xo8e")
 
 [node name="Spawner" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16, 0)

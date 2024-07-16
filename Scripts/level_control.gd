@@ -13,7 +13,26 @@ var rayEnd
 # Cell creation variables
 var cellObject = load("res://Objects/cell.tscn")
 var cellType
-#var cellID
+var ringPosition = [Vector3(0, 0, 5.25),
+Vector3(1.62, 0, 4.99),
+Vector3(3.08, 0.05, 4.24),
+Vector3(4.24, 0.05, 3.08),
+Vector3(4.99, 0.05, 1.62),
+Vector3(5.25, 0.05, -0),
+Vector3(4.99, 0.05, -1.62),
+Vector3(4.24, 0.05, -3.08),
+Vector3(3.08, 0.05, -4.24),
+Vector3(1.62, 0.05, -4.99),
+Vector3(0, 0.05, -5.25),
+Vector3(-1.62, 0.05, -4.99),
+Vector3(-3.08, 0.05, -4.24),
+Vector3(-4.24, 0.05, -3.08),
+Vector3(-4.99, 0.05, -1.62),
+Vector3(-5.25, 0.05, 0),
+Vector3(-4.99, 0.05, 1.62),
+Vector3(-4.24, 0.05, 3.08),
+Vector3(-3.08, 0.05, 4.24),
+Vector3(-1.62, 0.05, 4.99)]
 
 func _ready():
 	randomize()
@@ -66,27 +85,41 @@ func addCellToArray(newCell):
 # Set cell level according to height in world
 func _on_cell_landing(cell):
 	var level = roundi(cell.global_position.y/2)
-	remove_child(cell)
+	print("Landed! Layer ",level)
 	
 	match level:
-#		8:
-#			perigo
-#		7:
-#			$Cylinder/Ring8.add_child(cell)
-#		6:
-#			$Cylinder/Ring7.add_child(cell)
-#		5:
-#			$Cylinder/Ring6.add_child(cell)
-#		4:
-#			$Cylinder/Ring5.add_child(cell)
-#		3:
-#			$Cylinder/Ring4.add_child(cell)
-#		2:
-#			$Cylinder/Ring3.add_child(cell)
-#		1:
-#			$Cylinder/Ring2.add_child(cell)
+		8:
+			print("perigo")
+		7:
+			level = $Cylinder/Level8
+		6:
+			level = $Cylinder/Level7
+		5:
+			level = $Cylinder/Level6
+		4:
+			level = $Cylinder/Level5
+		3:
+			level = $Cylinder/Level4
+		2:
+			level = $Cylinder/Level3
+		1:
+			level = $Cylinder/Level2
 		0:
-			$Cylinder/Ring1.add_child(cell)
+			level = $Cylinder/Level1
+	
+	if level is Object:
+		#  Change parent, keep global position
+		cell.reparent(level, true)
+		
+		# Fix cell position within the parent ring
+		var closest = 10
+		var newPos
+		for i in (ringPosition):
+			if cell.position.distance_to(i) < closest:
+				closest = cell.position.distance_to(i)
+				newPos = i
+		cell.position = newPos
+
 
 #	upon landing, append cell to array
 
@@ -180,8 +213,8 @@ func _on_killer_body_entered(_body):
 #Tornar peça filha do anel onde aterrissar				OK!
 #Rotacionar anel c/ snapping							OK!
 
-#Consertar posicionamento da peça quando entra no anel	
-#Mover aneis independentemente							
+#Consertar posicionamento da peça quando entra no anel	OK!
+#Mover aneis independentemente							OK!
 #Peças visíveis no topo antes de cair (timer próprio)	
 #Adicionar peças criadas num array						
 #Fazer algo quando peças chegarem no topo				
