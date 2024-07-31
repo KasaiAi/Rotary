@@ -37,13 +37,11 @@ func breakup():
 	queue_free()
 
 func on_landing():
-	if onFloor and linear_velocity.y < -1:
+	if linear_velocity.y < -1:
 		onFloor = false
-	if not onFloor:
-		if $Grounded.is_colliding():
-			emit_signal("landed", self)
-			onFloor = true
+	if not onFloor and $Grounded.is_colliding():
+		onFloor = true
+		emit_signal("landed", self)
 
-func _process(_delta):
+func _physics_process(_delta):
 		on_landing()
-		print(rotation.y)
