@@ -67,7 +67,7 @@ func _on_SpawnTimer_timeout():
 func spawn_cell(amount:int = 1):
 	if $Spawner/Killer.perigo == true:
 		get_tree().paused = true
-		$Control.visible = true
+		$Gameover.visible = true
 #		gameover message and retry
 	for i in amount:
 		var newCell = cellObject.instantiate()
@@ -89,10 +89,7 @@ func addCellToArray(newCell):
 
 # Set cell level according to height in world
 func _on_cell_landing(cell):
-#	for child in $Cylinder.get_children():
-#		for grandchild in child.get_children():
-#			if grandchild.is_in_group("cells"):
-#				grandchild.sleeping = false
+#	emit global signal sleeping = false
 	
 	var level = roundi(cell.global_position.y/2)
 #	print("Landed! Layer ",level)
@@ -188,6 +185,10 @@ func raycast_object():
 	if ray.has("collider"):
 		return ray.collider
 
+func _on_retry_button_up():
+	get_tree().change_scene_to_file("res://Scenes/level.tscn")
+	get_tree().paused = false
+
 
 #Criar peça no cenário									OK!
 #Criar peça colorida no cenário							OK!
@@ -222,13 +223,13 @@ func raycast_object():
 #Mover aneis independentemente							OK!
 #Fazer algo quando peças chegarem no topo				OK!
 #Melhorar a interação do killer							OK!
+#Placeholder do game over								OK!
 
 #Mudar método da rotação pra colisão com os cubos		
 #Fazer a rotação do cilindro travar também				
 #Adicionar peças criadas num array						
 #Destruição de peças iguais adjacentes					
 #Atualizar o grid após movimentação, quebra e queda das peças
-#Placeholder do game over								
 #Peças visíveis no topo antes de cair (timer próprio)	
 
 #Máquina de estados pros cubos ou anéis...
