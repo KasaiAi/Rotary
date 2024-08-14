@@ -31,9 +31,11 @@ size = Vector3(1.30297, 2.00284, 1.98115)
 [node name="Cell" type="RigidBody3D" groups=["cells"]]
 axis_lock_linear_x = true
 axis_lock_linear_z = true
+mass = 5.0
 physics_material_override = SubResource("1")
 can_sleep = false
 lock_rotation = true
+freeze = true
 script = ExtResource("2")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
@@ -44,4 +46,11 @@ surface_material_override/0 = SubResource("StandardMaterial3D_wnuq8")
 shape = SubResource("4")
 
 [node name="Grounded" type="RayCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.973303, 0)
+target_position = Vector3(0, -0.1, 0)
+
+[node name="DropTimer" type="Timer" parent="."]
+wait_time = 0.7
+autostart = true
+
+[connection signal="timeout" from="DropTimer" to="." method="_drop_timeout"]

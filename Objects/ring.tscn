@@ -9,13 +9,10 @@ radius = 6.35068
 [node name="Ring" type="Area3D" groups=["rings"]]
 script = ExtResource("1_rt7if")
 
-[node name="CellContainer" type="Node" parent="."]
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CylinderShape3D_5f8wq")
 
 [node name="dragger" parent="." instance=ExtResource("2_13h7d")]
-process_mode = 4
 triggerAction = "click"
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

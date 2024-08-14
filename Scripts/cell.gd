@@ -1,8 +1,12 @@
 extends RigidBody3D
 
+const GRAVITY = .01
+var speed = 0
+
 var cellType = randi() % 4 # Número aleatório entre 0 e 4
 var onFloor = false
 
+signal falling
 signal landed
 
 func _ready():
@@ -21,11 +25,26 @@ func _ready():
 		3:
 			material.albedo_color = Color(0.83,0.78,0.1) # Yellow
 	
-#	Pode começar com freeze = true e soltar a peça depois de 1 segundo
+	Global.connect("unfreeze", _unfreeze)
 #	$RigidBody3D.collision_mask = grid.j #Define a camada de colisão/nível da célula de acordo com o array de peças
 
-#flavor de destruição das peças; cria vários fragmentos que caem
+func _drop_timeout():
+	_unfreeze()
+
+func _unfreeze():
+	freeze = false
+
+#func _on_mouse_entered():
+#	print("a")
+#	$Mesh.material_overlay = load("res://Assets/Materials/selection_highlight.tres")
+#
+#func _on_mouse_exited():
+#	print("b")
+#	$Mesh.material_overlay = null
+
+# Flavor de destruição das peças; cria vários fragmentos que caem
 func breakup():
+	Global.emit_signal("unfreeze")
 	var smolCell = load("res://Objects/cell bit.tscn")
 	for i in 8:
 		# Saves parent's position, applies random rotation, copies parent's color, adds minis as children of world node and deletes parent cell
@@ -36,12 +55,33 @@ func breakup():
 		get_tree().root.get_child(0).add_child(cellBit)
 	queue_free()
 
-func on_landing():
-	if linear_velocity.y < -1:
+#func _process(_delta):
+#	if not onFloor and $Grounded.is_colliding():
+#		print($Grounded.get_collider())
+#	if not $Grounded.is_colliding():
+#		print("caiu")
+#	else:
+#		print("fixou")
+
+# StaticBody
+#func _physics_process(_delta):
+#	if not onFloor and $Grounded.is_colliding():
+#		speed = 0
+#		onFloor = true
+#		print("colidiu")
+#	elif not $Grounded.is_colliding():
+#		onFloor = false
+#		speed -= GRAVITY
+#		translate(Vector3(0, speed, 0))
+
+# RigidBody
+func _physics_process(_delta):
+	if linear_velocity.y < -2:
 		onFloor = false
+		emit_signal("falling", self)
 	if not onFloor and $Grounded.is_colliding():
 		onFloor = true
+		freeze = true
 		emit_signal("landed", self)
-
-func _physics_process(_delta):
-		on_landing()
+		print(global_position.y)
+		linear_velocity.y = 0

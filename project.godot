@@ -16,6 +16,10 @@ config/features=PackedStringArray("4.1")
 config/icon="res://Icons/icon64.png"
 config/windows_native_icon="res://Icons/icon.ico"
 
+[autoload]
+
+Global="*res://Scripts/global.gd"
+
 [display]
 
 window/size/viewport_width=600
@@ -36,7 +40,9 @@ drag={
 
 [physics]
 
+common/physics_ticks_per_second=70
 3d/default_gravity_vector=Vector3(0, -7, 0)
+common/physics_engine="DEFAULT"
 
 [rendering]
 

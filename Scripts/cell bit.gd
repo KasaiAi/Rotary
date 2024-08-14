@@ -9,9 +9,8 @@ func _ready():
 
 func _process(_delta):
 	# Limpeza de objetos fora de tela
-	if position.y < -25:
+	if global_position.y < -25:
 		queue_free()
-#		print("Morri")
 	
 	# Girozin aleatório
 	$Mesh.rotate_x(spinX)
