@@ -63,9 +63,9 @@ func _ready():
 
 func create_array():
 	var array = []
-	for i in ringSize:
+	for i in maxRings:
 		array.append([])
-		for j in maxRings:
+		for j in ringSize:
 			array[i].append(null)
 	return array
 
@@ -76,8 +76,8 @@ func startup(initialSpawn):#initialSpawn
 		initialSpawn -= 1
 		startup(initialSpawn)
 	if initialSpawn <= 0:
-		$SpawnTimer.start(.7)
-#		$SpawnTimer.stop()
+#		$SpawnTimer.start(.7)
+		$SpawnTimer.stop()
 
 func _on_SpawnTimer_timeout():
 #	await get_tree().create_timer(1).timeout
@@ -90,85 +90,80 @@ func spawn_cell(amount:int = 1):
 	for i in amount:
 		var newCell = cellObject.instantiate()
 		newCell.transform = $Spawner.global_transform
-		newCell.translate_object_local(Vector3(0,0,5.25))
 		
-#		addCellToArray(newCell)
 		newCell.connect("landed", _on_cell_landed)
 		newCell.connect("falling", _on_cell_falling)
+		newCell.connect("clear", _on_cell_clear)
 		add_child(newCell)
 		move_spawn_point()
 
 func spawn_ring():
 	spawn_cell(19)
-	Global.emit_signal("unfreeze")
+	Global.emit_signal("wake_up")
 
 func move_spawn_point():
 	$Spawner.rotate(Vector3(0,1,0),PI/10)
 
-func addCellToArray(newCell):
-	for width in ringSize:
-		for height in maxRings:
-			if grid[width][height] == null:
-				grid[width][height] = newCell
-				print(grid)
-				return
-
 func _on_cell_falling(cell):
 	cell.reparent(self)
+#	print(cell.global_position)
 
 # Set cell level according to height in world
 func _on_cell_landed(cell):
-	
-	var level = roundi(cell.global_position.y/2)
-	print("Landed! Layer ",level)
-#	print(global_rotation)
+	var level = roundi(cell.global_position.y/2) # Numerical value for the cell's vertical level
+	var layer # Temp variable for the cell's ring node
+#	print("Landed! Layer ",level)
 	
 	match level:
 		8:
 			print("perigo")
 		7:
-			level = $Cylinder/Level8
+			layer = $Cylinder/Level8
 		6:
-			level = $Cylinder/Level7
+			layer = $Cylinder/Level7
 		5:
-			level = $Cylinder/Level6
+			layer = $Cylinder/Level6
 		4:
-			level = $Cylinder/Level5
+			layer = $Cylinder/Level5
 		3:
-			level = $Cylinder/Level4
+			layer = $Cylinder/Level4
 		2:
-			level = $Cylinder/Level3
+			layer = $Cylinder/Level3
 		1:
-			level = $Cylinder/Level2
+			layer = $Cylinder/Level2
 		0:
-			level = $Cylinder/Level1
+			layer = $Cylinder/Level1
 	
-	if level is Object:
-		#  Change parent, keep global position
-		cell.reparent(level, true)
-#		print(cell.global_rotation.y)
+	if layer is Object:
+		#  Change parent, keep global transform
+		cell.reparent(layer, true)
 		
-		# Fix cell position upon reparenting
-		var closest = 10
-		var newPos
-		for i in (ringPosition):
-			if cell.position.distance_to(i) < closest:
-				closest = cell.position.distance_to(i)
-				newPos = i
-		cell.position = newPos
+		# Fix cell rotation upon reparenting
+		cell.rotation.y = snappedf(cell.rotation.y, PI/10)
 		
-		# Fix cell rotation upon reparenting (broken, maybe the adjustment has to happen before reparenting)
-#		var diff = fmod(cell.global_rotation.y, PI/10)
-#		if cell.global_rotation.y > 0:
-#			cell.global_rotation.y -= diff
-#		else:
-#			cell.global_rotation.y += diff
-	
-#	upon landed, append cell to array
+		if cell.global_position.y == level*2:
+			cell.freeze = true
+		
+		# Append cell to array
+#		grid[level][ringPosition.find(newPos)] = cell
+		
+#		print(grid[0])
+#		print(grid[1])
+#		print()
 
-func _process(_delta):
+func _on_cell_clear(cell):
+	var level = roundi(cell.global_position.y/2)
+	grid[level].erase(cell)
+	print(grid[0])
+	print(grid[1])
+	print()
+
+#func _process(_delta):
+#	mousePos = get_viewport().get_mouse_position()
+#	$Mouseover.target_position = Vector3((mousePos.x-300)/40, (-mousePos.y+324)/40, -15)
+
+func _input(_event):
 	var object = raycast_object()
-
 	if Input.is_action_just_pressed("ui_select"):
 		spawn_ring()
 	if Input.is_action_just_pressed("ui_down"):
@@ -181,11 +176,6 @@ func _process(_delta):
 		if object != null and object.is_in_group("cells"):
 			object.breakup()
 #		spawn_cell()
-	
-#	mousePos = get_viewport().get_mouse_position()
-#	$Mouseover.target_position = Vector3((mousePos.x-300)/40, (-mousePos.y+324)/40, -15)
-	
-#	highlight the collider's entire row
 
 # Raycaster
 func raycast_object():
@@ -243,13 +233,15 @@ func _on_retry_button_up():
 #Melhorar a interação do killer							OK!
 #Placeholder do game over								OK!
 #Fazer a rotação do cilindro travar também				OK!
-#Peças visíveis no topo antes de cair (timer próprio)	OK!
+#Peças visíveis no topo antes de cair (timer local)		OK!
+#Peças mais de cima não estão caindo					OK!
 
-#Mudar método da rotação pra colidir com os cubos		
 #Adicionar peças criadas num array						
+#Mudar método da rotação pra colidir com os cubos		
 #Destruição de peças iguais adjacentes					
 #Atualizar o grid após movimentação, quebra e queda das peças
 #Peças às vezes caem dentro de outras					
+#	- Checar espaços adjacentes e ocupar o que estiver vazio
 
 #Máquina de estados pros cubos ou anéis...
 
@@ -257,15 +249,12 @@ func _on_retry_button_up():
 #Tentar embaralhar mais as peças?
 
 ## Bugs nó-cego
-#Consertar o bug do cubo extra no cell.tscn			OK!
-#Peças não se movem quando as de baixo somem		OK!
-#Peças flutuantes disparam quando soltas			OK!
-#Raycast é bloqueado pelos colisores dos anéis		OK!
-#Sinal de aterrissagem tá duplicado sem motivo		OK!
-#Peças tremem quando estão paradas					OK!
-#Consertar iluminação								
-#Consertar rotação da peça quando entra no anel		
-
-#Algumas peças ficam travadas fora de qualquer anel - investigar
-#Peças de cima estão caindo atrasadas porque no momento da liberação elas ainda estão "no chão"
-#Quando as peças caem, as peças abaixo tremem; tem a ver com o quanto elas empurram antes de definir a altura
+#Consertar o bug do cubo extra no cell.tscn				OK!
+#Peças não se movem quando as de baixo somem			OK!
+#Peças flutuantes disparam quando soltas				OK!
+#Raycast é bloqueado pelos colisores dos anéis			OK!
+#Sinal de aterrissagem tá duplicado sem motivo			OK!
+#Peças tremem quando estão paradas						OK!
+#Com freeze ou sem freeze?								OK!
+#Consertar rotação da peça quando entra no anel			OK!
+#Consertar iluminação									

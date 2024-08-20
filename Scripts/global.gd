@@ -1,3 +1,3 @@
 extends Node
 
-signal unfreeze
+signal wake_up

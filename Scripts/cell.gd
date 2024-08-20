@@ -8,6 +8,7 @@ var onFloor = false
 
 signal falling
 signal landed
+signal clear
 
 func _ready():
 #	$RigidBody3D/Mesh.material_override = StandardMaterial3D.new() #Cria novo material pra a célula
@@ -25,13 +26,13 @@ func _ready():
 		3:
 			material.albedo_color = Color(0.83,0.78,0.1) # Yellow
 	
-	Global.connect("unfreeze", _unfreeze)
+	Global.connect("wake_up", _wake_up)
 #	$RigidBody3D.collision_mask = grid.j #Define a camada de colisão/nível da célula de acordo com o array de peças
 
 func _drop_timeout():
-	_unfreeze()
+	_wake_up()
 
-func _unfreeze():
+func _wake_up():
 	freeze = false
 
 #func _on_mouse_entered():
@@ -44,44 +45,27 @@ func _unfreeze():
 
 # Flavor de destruição das peças; cria vários fragmentos que caem
 func breakup():
-	Global.emit_signal("unfreeze")
+	Global.emit_signal("wake_up")
+	emit_signal("clear", self)
 	var smolCell = load("res://Objects/cell bit.tscn")
 	for i in 8:
 		# Saves parent's position, applies random rotation, copies parent's color, adds minis as children of world node and deletes parent cell
 		var cellBit = smolCell.instantiate()
-		cellBit.transform = global_transform
+		cellBit.transform = $Mesh.global_transform
 		cellBit.translate_object_local(Vector3(randi_range(-1, 1),1,randi_range(-1, 1)))
 		cellBit.get_node("Mesh").get_surface_override_material(0).albedo_color = $Mesh.get_surface_override_material(0).albedo_color
 		get_tree().root.get_child(0).add_child(cellBit)
 	queue_free()
 
-#func _process(_delta):
-#	if not onFloor and $Grounded.is_colliding():
-#		print($Grounded.get_collider())
-#	if not $Grounded.is_colliding():
-#		print("caiu")
-#	else:
-#		print("fixou")
-
-# StaticBody
-#func _physics_process(_delta):
-#	if not onFloor and $Grounded.is_colliding():
-#		speed = 0
-#		onFloor = true
-#		print("colidiu")
-#	elif not $Grounded.is_colliding():
-#		onFloor = false
-#		speed -= GRAVITY
-#		translate(Vector3(0, speed, 0))
-
-# RigidBody
 func _physics_process(_delta):
-	if linear_velocity.y < -2:
+	if onFloor and linear_velocity.y < -2:
 		onFloor = false
 		emit_signal("falling", self)
+		emit_signal("clear", self)
 	if not onFloor and $Grounded.is_colliding():
 		onFloor = true
-		freeze = true
 		emit_signal("landed", self)
-		print(global_position.y)
+#		freeze = true
 		linear_velocity.y = 0
+	if $Grounded.get_collider() != null and $Grounded.get_collider().onFloor == false:
+		onFloor = false

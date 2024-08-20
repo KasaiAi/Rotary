@@ -1,8 +1,8 @@
 extends Node3D
 
 # States
-var selected = false
-var dragging = false
+var selected = false # For rings being hovered
+var dragging = false # For rings being dragged
 
 func _on_mouse_entered():
 	selected = true
@@ -23,19 +23,17 @@ func _process(_delta):
 		for i in get_children():
 			if i.is_in_group("cells") and i.get_node("Mesh").material_overlay:
 				i.get_node("Mesh").material_overlay = null
-				
+	
 	if Input.is_action_just_released("click"):
 		dragging = false
 		# Frees frozen cells
-		for child in get_children():
-			if child.is_in_group("cells"):
-				child.freeze = false
-#		reassign array positions
+		Global.emit_signal("wake_up")
+#		todo: reassign array positions
 	
 	if dragging:
 		# Activates dragger node for the selected ring
 		$dragger.process_mode = Node.PROCESS_MODE_INHERIT
-		# Freezes cells in spinning ring so they don't shoot downwards when physics reactivate
+		# Freezes cells in spinning ring so they don't shoot downwards when released
 		for child in get_children():
 			if child.is_in_group("cells"):
 				child.freeze = true
@@ -46,5 +44,3 @@ func _input(_event):
 		$dragger.process_mode = Node.PROCESS_MODE_DISABLED
 
 #reorganize cell array with new positions according to angle
-#material_overlay = light white
-
