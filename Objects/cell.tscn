@@ -56,4 +56,20 @@ wait_time = 0.7
 one_shot = true
 autostart = true
 
+[node name="Above" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 5.25)
+target_position = Vector3(0, 1, 0)
+
+[node name="Below" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.92, 5.25)
+
+[node name="Right" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, 0, 5.25)
+target_position = Vector3(1, 0, 0)
+
+[node name="Left" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, 0, 5.25)
+target_position = Vector3(-1, 0, 0)
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="timeout" from="DropTimer" to="." method="_drop_timeout"]

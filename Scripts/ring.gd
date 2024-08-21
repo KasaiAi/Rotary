@@ -13,19 +13,21 @@ func _on_mouse_exited():
 func _process(_delta):
 	# Highlights selected ring (CHANGE TRIGGER TO CELL AND HIGHLIGHT ADJACENT SAME-COLOR CELLS)
 	if selected:
-		for i in get_children():
-			if i.is_in_group("cells") and not i.get_node("Mesh").material_overlay:
-				i.get_node("Mesh").material_overlay = load("res://Assets/Materials/selection_highlight.tres")
+#		for i in get_children():
+#			if i.is_in_group("cells") and not i.get_node("Mesh").material_overlay:
+#				i.get_node("Mesh").material_overlay = load("res://Assets/Materials/selection_highlight.tres")
 		
 		if Input.is_action_just_pressed("click"):
 			dragging = true
-	else:
-		for i in get_children():
-			if i.is_in_group("cells") and i.get_node("Mesh").material_overlay:
-				i.get_node("Mesh").material_overlay = null
+#	else:
+#		for i in get_children():
+#			if i.is_in_group("cells") and i.get_node("Mesh").material_overlay:
+#				i.get_node("Mesh").material_overlay = null
 	
 	if Input.is_action_just_released("click"):
 		dragging = false
+#		rotation.y = 0
+		
 		# Frees frozen cells
 		Global.emit_signal("wake_up")
 #		todo: reassign array positions

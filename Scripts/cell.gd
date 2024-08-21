@@ -1,10 +1,11 @@
 extends RigidBody3D
 
-const GRAVITY = .01
-var speed = 0
-
 var cellType = randi() % 4 # Número aleatório entre 0 e 4
 var onFloor = false
+var checked = false
+
+var level # Numerical value for the cell's vertical level
+var truePosition # Adjusted array position
 
 signal falling
 signal landed
@@ -27,7 +28,6 @@ func _ready():
 			material.albedo_color = Color(0.83,0.78,0.1) # Yellow
 	
 	Global.connect("wake_up", _wake_up)
-#	$RigidBody3D.collision_mask = grid.j #Define a camada de colisão/nível da célula de acordo com o array de peças
 
 func _drop_timeout():
 	_wake_up()
@@ -36,6 +36,12 @@ func _wake_up():
 	freeze = false
 
 #func _on_mouse_entered():
+#	if $Mesh.material_overlay:
+#		$Mesh.material_overlay = null
+#		remove_from_group("checked")
+#	else:
+#		$Mesh.material_overlay = load("res://Assets/Materials/selection_highlight.tres")
+#	neighborCheck()
 #	print("a")
 #	$Mesh.material_overlay = load("res://Assets/Materials/selection_highlight.tres")
 #
@@ -46,16 +52,33 @@ func _wake_up():
 # Flavor de destruição das peças; cria vários fragmentos que caem
 func breakup():
 	Global.emit_signal("wake_up")
-	emit_signal("clear", self)
 	var smolCell = load("res://Objects/cell bit.tscn")
 	for i in 8:
-		# Saves parent's position, applies random rotation, copies parent's color, adds minis as children of world node and deletes parent cell
+		# Copia a posição do pai, define uma rotação aleatória, copia a cor do pai, adiciona minis
+		# como filhas do nó raiz e deleta a peça original
 		var cellBit = smolCell.instantiate()
 		cellBit.transform = $Mesh.global_transform
 		cellBit.translate_object_local(Vector3(randi_range(-1, 1),1,randi_range(-1, 1)))
 		cellBit.get_node("Mesh").get_surface_override_material(0).albedo_color = $Mesh.get_surface_override_material(0).albedo_color
 		get_tree().root.get_child(0).add_child(cellBit)
 	queue_free()
+
+# Checa se as peças adjacentes são da mesma cor
+func neighborCheck():
+	probe($Above.get_collider())
+	probe($Below.get_collider())
+	probe($Right.get_collider())
+	probe($Left.get_collider())
+
+# Função assistente pra reduzir a neighborCheck()
+func probe(neighbor):
+	if neighbor != null and neighbor.name != "Floor":
+		if neighbor.is_in_group("cells") and neighbor.cellType == cellType:
+			print("Match!")
+			checked = true
+			if not neighbor.checked:
+				neighbor.neighborCheck()
+			breakup()
 
 func _physics_process(_delta):
 	if onFloor and linear_velocity.y < -2:
@@ -65,7 +88,6 @@ func _physics_process(_delta):
 	if not onFloor and $Grounded.is_colliding():
 		onFloor = true
 		emit_signal("landed", self)
-#		freeze = true
 		linear_velocity.y = 0
 	if $Grounded.get_collider() != null and $Grounded.get_collider().onFloor == false:
 		onFloor = false

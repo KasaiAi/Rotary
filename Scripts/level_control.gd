@@ -3,47 +3,47 @@ extends Node3D
 # Grid and array variables
 @export var maxRings = 8	# Height
 @export var ringSize = 20	# Width
-var grid:Array
-var ringPosition = [Vector3(0, 0, 5.25),
- Vector3(1.62, 0, 4.99),
- Vector3(3.08, 0, 4.24),
- Vector3(4.24, 0, 3.08),
- Vector3(4.99, 0, 1.62),
- Vector3(5.25, 0, -0),
- Vector3(4.99, 0, -1.62),
- Vector3(4.24, 0, -3.08),
- Vector3(3.08, 0, -4.24),
- Vector3(1.62, 0, -4.99),
- Vector3(0, 0, -5.25),
- Vector3(-1.62, 0, -4.99),
- Vector3(-3.08, 0, -4.24),
- Vector3(-4.24, 0, -3.08),
- Vector3(-4.99, 0, -1.62),
- Vector3(-5.25, 0, 0),
- Vector3(-4.99, 0, 1.62),
- Vector3(-4.24, 0, 3.08),
- Vector3(-3.08, 0, 4.24),
- Vector3(-1.62, 0, 4.99)]
-var ringRotation = [0,
- 0.31,
- 0.63,
- 0.94,
- 1.25,
- 1.57,
- 1.88,
- 2.2,
- 2.51,
- 2.82,
- 3.14,
- -2.82,
- -2.51,
- -2.2,
- -1.88,
- -1.57,
- -1.25,
- -0.94,
- -0.63,
- -0.31]
+#var grid:Array
+#var ringPosition = [Vector3(0, 0, 5.25),
+# Vector3(1.62, 0, 4.99),
+# Vector3(3.08, 0, 4.24),
+# Vector3(4.24, 0, 3.08),
+# Vector3(4.99, 0, 1.62),
+# Vector3(5.25, 0, -0),
+# Vector3(4.99, 0, -1.62),
+# Vector3(4.24, 0, -3.08),
+# Vector3(3.08, 0, -4.24),
+# Vector3(1.62, 0, -4.99),
+# Vector3(0, 0, -5.25),
+# Vector3(-1.62, 0, -4.99),
+# Vector3(-3.08, 0, -4.24),
+# Vector3(-4.24, 0, -3.08),
+# Vector3(-4.99, 0, -1.62),
+# Vector3(-5.25, 0, 0),
+# Vector3(-4.99, 0, 1.62),
+# Vector3(-4.24, 0, 3.08),
+# Vector3(-3.08, 0, 4.24),
+# Vector3(-1.62, 0, 4.99)]
+#var ringRotation = [0,
+# 0.31,
+# 0.63,
+# 0.94,
+# 1.25,
+# 1.57,
+# 1.88,
+# 2.2,
+# 2.51,
+# 2.82,
+# 3.14,
+# -2.82,
+# -2.51,
+# -2.2,
+# -1.88,
+# -1.57,
+# -1.25,
+# -0.94,
+# -0.63,
+# -0.31]
 
 # Raycast variables
 var mousePos
@@ -56,18 +56,18 @@ var cellType
 
 func _ready():
 	randomize()
-	grid = create_array()
+#	grid = create_array()
 #	print(grid)
 	
 	startup(0)
 
-func create_array():
-	var array = []
-	for i in maxRings:
-		array.append([])
-		for j in ringSize:
-			array[i].append(null)
-	return array
+#func create_array():
+#	var array = []
+#	for i in maxRings:
+#		array.append([])
+#		for j in ringSize:
+#			array[i].append(null)
+#	return array
 
 func startup(initialSpawn):#initialSpawn
 	if initialSpawn > 0:
@@ -93,7 +93,6 @@ func spawn_cell(amount:int = 1):
 		
 		newCell.connect("landed", _on_cell_landed)
 		newCell.connect("falling", _on_cell_falling)
-		newCell.connect("clear", _on_cell_clear)
 		add_child(newCell)
 		move_spawn_point()
 
@@ -106,15 +105,14 @@ func move_spawn_point():
 
 func _on_cell_falling(cell):
 	cell.reparent(self)
-#	print(cell.global_position)
 
 # Set cell level according to height in world
 func _on_cell_landed(cell):
-	var level = roundi(cell.global_position.y/2) # Numerical value for the cell's vertical level
+	cell.level = roundi(cell.global_position.y/2)
 	var layer # Temp variable for the cell's ring node
 #	print("Landed! Layer ",level)
 	
-	match level:
+	match cell.level:
 		8:
 			print("perigo")
 		7:
@@ -137,26 +135,32 @@ func _on_cell_landed(cell):
 	if layer is Object:
 		#  Change parent, keep global transform
 		cell.reparent(layer, true)
-		
+		# Freeze physics to reduce jitter
+		if cell.global_position.y == cell.level*2:
+			cell.freeze = true
 		# Fix cell rotation upon reparenting
 		cell.rotation.y = snappedf(cell.rotation.y, PI/10)
+		# Fix coordinates for the grid array
+		cell.truePosition = roundi(cell.rotation.y/(PI/10))
+		if cell.truePosition < 0:
+			cell.truePosition += 20
 		
-		if cell.global_position.y == level*2:
-			cell.freeze = true
+#		print(cell.level,", ",cell.truePosition)
 		
 		# Append cell to array
-#		grid[level][ringPosition.find(newPos)] = cell
+#		grid[cell.level][cell.truePosition] = cell.cellType
 		
 #		print(grid[0])
 #		print(grid[1])
 #		print()
 
-func _on_cell_clear(cell):
-	var level = roundi(cell.global_position.y/2)
-	grid[level].erase(cell)
-	print(grid[0])
-	print(grid[1])
-	print()
+#func _on_cell_clear(cell):
+#	cell.level = roundi(cell.global_position.y/2)
+#	cell.truePosition = roundi(cell.rotation.y/(PI/10))
+#	grid[cell.level][cell.truePosition] = null
+#	print(grid[0])
+#	print(grid[1])
+#	print()
 
 #func _process(_delta):
 #	mousePos = get_viewport().get_mouse_position()
@@ -174,7 +178,8 @@ func _input(_event):
 		move_spawn_point()
 	if Input.is_action_just_released("click"):
 		if object != null and object.is_in_group("cells"):
-			object.breakup()
+#			object.breakup()
+			object.neighborCheck()
 #		spawn_cell()
 
 # Raycaster
@@ -236,14 +241,12 @@ func _on_retry_button_up():
 #Peças visíveis no topo antes de cair (timer local)		OK!
 #Peças mais de cima não estão caindo					OK!
 
-#Adicionar peças criadas num array						
+#Destruição de peças iguais adjacentes					OK!
+#Adicionar peças criadas num array						FDS EU VENCI AHAHAHAHAH
+#Atualizar o grid após alteração das peças				NUNCAAA AAHAHAHA
 #Mudar método da rotação pra colidir com os cubos		
-#Destruição de peças iguais adjacentes					
-#Atualizar o grid após movimentação, quebra e queda das peças
-#Peças às vezes caem dentro de outras					
-#	- Checar espaços adjacentes e ocupar o que estiver vazio
-
-#Máquina de estados pros cubos ou anéis...
+#Consertar peças caindo dentro de outras				
+#Criar condição pra não destruir depois de arrastar		
 
 #Melhorar as cores
 #Tentar embaralhar mais as peças?
