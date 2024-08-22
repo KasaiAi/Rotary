@@ -2,7 +2,7 @@ extends Area3D
 
 var perigo = false
 
-#game over
+# Game over
 func _on_body_entered(_body):
 	print("perigo")
 	perigo = true

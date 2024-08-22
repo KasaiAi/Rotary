@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c47v3dpdoqi13"]
+[gd_scene load_steps=8 format=3 uid="uid://c47v3dpdoqi13"]
 
 [ext_resource type="Script" path="res://Scripts/cell.gd" id="2"]
 
@@ -28,6 +28,9 @@ emission_energy_multiplier = 0.05
 [sub_resource type="BoxShape3D" id="4"]
 size = Vector3(1.30297, 2.00284, 1.98115)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_hxkcj"]
+size = Vector3(0.2, 0.2, 0.2)
+
 [node name="Cell" type="RigidBody3D" groups=["cells"]]
 axis_lock_linear_x = true
 axis_lock_linear_z = true
@@ -43,7 +46,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.25)
 mesh = SubResource("3")
 surface_material_override/0 = SubResource("StandardMaterial3D_wnuq8")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="Collider" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.25)
 shape = SubResource("4")
 
@@ -58,18 +61,26 @@ autostart = true
 
 [node name="Above" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 5.25)
-target_position = Vector3(0, 1, 0)
+target_position = Vector3(0, 0.5, 0)
 
 [node name="Below" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.92, 5.25)
+target_position = Vector3(0, -0.5, 0)
 
 [node name="Right" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, 0, 5.25)
-target_position = Vector3(1, 0, 0)
+target_position = Vector3(0.5, 0, 0)
 
 [node name="Left" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, 0, 5.25)
-target_position = Vector3(-1, 0, 0)
+target_position = Vector3(-0.5, 0, 0)
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.25)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_hxkcj")
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="timeout" from="DropTimer" to="." method="_drop_timeout"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_clip"]

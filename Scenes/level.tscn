@@ -89,6 +89,14 @@ modulate = Color(0, 0, 0, 0.666667)
 pixel_size = 0.0295
 texture = SubResource("CanvasTexture_fqpv1")
 
+[node name="Score" type="Label" parent="."]
+offset_left = 13.0
+offset_top = 11.0
+offset_right = 74.0
+offset_bottom = 37.0
+text = "Score: 0"
+vertical_alignment = 1
+
 [node name="Gameover" type="Control" parent="."]
 process_mode = 2
 visible = false
