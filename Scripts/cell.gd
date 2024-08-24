@@ -11,6 +11,12 @@ signal falling
 signal landed
 
 func _ready():
+	set_color()
+	
+	Global.connect("wake_up", _wake_up)
+	Global.connect("release", _release)
+
+func set_color():
 #	$RigidBody3D/Mesh.material_override = StandardMaterial3D.new() #Cria novo material pra a célula
 	var material = $Mesh.get_surface_override_material(0) # Chama o material da célula
 	
@@ -25,9 +31,6 @@ func _ready():
 			material.albedo_color = Color(0.1,0.3,0.8) # Blue
 		3:
 			material.albedo_color = Color(0.83,0.78,0.1) # Yellow
-	
-	Global.connect("wake_up", _wake_up)
-	Global.connect("release", _release)
 
 func _drop_timeout():
 	_wake_up()
@@ -98,9 +101,21 @@ func _physics_process(_delta):
 		linear_velocity.y = 0
 	if $Grounded.get_collider() != null and $Grounded.get_collider().onFloor == false:
 		onFloor = false
+#	if linear_velocity == Vector3(0, 0, 0):
+#		if not $Left.is_colliding():
+#			rotate_y(-PI/10)
+#		else:
+#			rotate_y(PI/10)
+	
+	if onFloor and global_position.y >= 13:
+		$Mesh/AnimationPlayer.play("danger")
+	else:
+		$Mesh/AnimationPlayer.stop()
+		set_color()
 
 # Clipping treatment; still needs work
 func _on_clip(body):
-	if body != self and body.is_in_group("cells") and not onFloor:
+	if body.name == "Core" and not onFloor:
+		print("entrou")
 		clipping = true
 		queue_free() # Temporary clipping fix, ideally the cell should fall in the correct spot

@@ -46,3 +46,11 @@ func _input(_event):
 		$dragger.process_mode = Node.PROCESS_MODE_DISABLED
 
 #reorganize cell array with new positions according to angle
+
+func _on_child_entered_tree(cell):
+	cell
+		
+
+
+func _on_child_exiting_tree(node):
+	pass # Replace with function body.

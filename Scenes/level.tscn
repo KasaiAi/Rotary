@@ -124,6 +124,7 @@ offset_right = 359.0
 offset_bottom = 389.0
 text = "Retry"
 
+[connection signal="child_entered_tree" from="Cylinder/Level8" to="Cylinder/Level8" method="_on_child_entered_tree"]
 [connection signal="body_entered" from="Spawner/Killer" to="Spawner/Killer" method="_on_body_entered"]
 [connection signal="body_exited" from="Spawner/Killer" to="Spawner/Killer" method="_on_body_exited"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_SpawnTimer_timeout"]

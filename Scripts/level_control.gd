@@ -26,8 +26,8 @@ func startup(initialSpawn):
 		initialSpawn -= 1
 		startup(initialSpawn)
 	if initialSpawn <= 0:
-#		$SpawnTimer.start(spawnTime)
-		$SpawnTimer.stop()
+		$SpawnTimer.start(spawnTime)
+#		$SpawnTimer.stop()
 
 func _on_SpawnTimer_timeout():
 	spawn_cell()
@@ -36,7 +36,7 @@ func _on_SpawnTimer_timeout():
 
 # Create one cell
 func spawn_cell(amount:int = 1):
-	if $Spawner/Killer.perigo == true:
+	if $Spawner/Killer.danger == true:
 		get_tree().paused = true
 		$Gameover.visible = true
 	for i in amount:
@@ -67,9 +67,7 @@ func _on_cell_landed(cell):
 	
 	# Set cell level according to height in world
 	match cell.level:
-		8:
-			print("perigo")
-		7:
+		7, 8:
 			layer = $Cylinder/Level8
 		6:
 			layer = $Cylinder/Level7
@@ -104,14 +102,21 @@ func _on_cell_landed(cell):
 #			elif not cell.get_node("Left").is_colliding():
 #				cell.rotate_y(-PI/10)
 	
-	# Falling combo (must activate only after click)
-	if Global.combo > 1:
-		search_and_destroy(cell)
+#	# Falling combo (must activate only after click)
+#	if Global.combo > 1:
+#		search_and_destroy(cell)
+#
+#	if cell.global_position.y >= 13:
+#		cell.get_node("Mesh/AnimationPlayer").play("danger")
+#	else:
+#		cell.get_node("Mesh/AnimationPlayer").stop()
+#		cell.set_color()
 
 # Score updater
 func updateScore(amount):
-	score += amount * (1+(((amount/4)-1)/2.0)) # Multiplier goes up by 0.5 every 4 pieces
-	score = score * Global.combo # Wombo combo
+	var addScore = amount * (1+(((amount/4)-1)/2.0)) # Multiplier goes up by 0.5 every 4 pieces
+	addScore = addScore * Global.combo # Wombo combo
+	score += floor(addScore)
 	$Score.text = "Score: " + str(score)
 
 func _input(_event):
