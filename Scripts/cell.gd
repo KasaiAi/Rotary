@@ -1,9 +1,11 @@
 extends RigidBody3D
 
 var cellType = randi() % 4 # Número aleatório entre 0 e 4
-var onFloor = false # Is touches florr?
-var checked = false # To avoid endless recursion during contiguousCheck()
-var clipping = false # Tells if there is another cell in this space
+var onFloor = false # Pra saber se o cubo está TOCANDO o chão
+var inPlay = false # Pra saber se o cubo já TOCOU o chão alguma vez
+var checked = false # Pra evitar recursão infinita em contiguousCheck()
+var comboing = false # Pra determinar quais cubos podem quebrar num combo
+var clipping = false # Diz se tem outro cubo no mesmo espaço
 
 var level # Numerical value for the cell's vertical level
 
@@ -96,6 +98,8 @@ func _physics_process(_delta):
 		onFloor = false
 		emit_signal("falling", self)
 	if not onFloor and $Grounded.is_colliding():
+		if !inPlay:
+			inPlay = true
 		onFloor = true
 		emit_signal("landed", self)
 		linear_velocity.y = 0

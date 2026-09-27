@@ -208,15 +208,20 @@ func _on_retry_button_up():
 #Destruição de peças iguais adjacentes					OK!
 #Adicionar peças criadas num array						FDS EU VENCI AHAHAHAHAH
 #Atualizar o grid após alteração das peças				NUNCAAA AAHAHAHA
+#Acelerar timer de spawn com o tempo					OK!
+#Upgrade pra 4.5										OK!
 
-#Criar condição pra não destruir depois de arrastar		
-#Mudar método da rotação pra sair a partir das peças	
-#Iluminar peças contíguas								
-#Sistema de pontuação									parcial
-#Acelerar timer de spawn com o tempo					
 #Rotacionar spawn com o cilindro						
-#Redimensionar a tela, onjetos e adicionar UI			
+#Variável pra não destruir depois de arrastar			
+#"Combável" só ativa quando a peça aterrissa uma vez	
+#Sistema de combos										
+#Tremer peças quebráveis, iluminar anel selecionado		
+#Trocar peças verticalmente								
+#Sistema de pontuação									parcial
+#Mudar pisca-alerta por triângulo de alerta (textura)	
+#Redimensionar a tela, objetos e adicionar UI			
 #Melhorar/variar mais as cores							
+#Melhorar iluminação									
 
 ## Bugs nó-cego
 #Consertar o bug do cubo extra no cell.tscn				OK!
@@ -228,4 +233,3 @@ func _on_retry_button_up():
 #Com freeze ou sem freeze?								OK!
 #Consertar rotação da peça quando entra no anel			OK!
 #Consertar peças caindo dentro de outras				
-#Consertar iluminação									
